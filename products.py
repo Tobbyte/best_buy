@@ -1,17 +1,34 @@
-# ruff: noqa: D100, D107, D101, D102
+# ruff: noqa: D100, D107, D101, D102,ERA001
+from typing import Any
+
+
 class Product:
     ERR_INIT = "Wrong init params."
     ERR_BUY = "BUY err"
+    _FIELD_TYPES = {"name": str, "price": float | int, "quantity": int}
+
+    def __setattr__(self, name: str, value: Any) -> None:
+        """Validate."""
+        expected_type = self._FIELD_TYPES.get(name)
+        if expected_type and not isinstance(value, expected_type):
+            err_msg = f"{name} is not of type {expected_type}"
+            raise TypeError(err_msg)
+        super().__setattr__(name, value)
+
+    # @classmethod
+    # def _is_valid(cls, sets: list[tuple[Any, (tuple | type)]]) -> bool:
+    #     for val, data_type in sets:
+    #         if not isinstance(val, (data_type,)):
+    #             err_msg = f"{val} is not of type {data_type}"
+    #             raise TypeError(err_msg)
+    #     return True
 
     def __init__(self, name: str, price: float, quantity: int) -> None:
-        print(name, price, quantity)
-        if (
-            not name
-            or not isinstance(name, str)
-            or not isinstance(price, (float, int))
-            or not isinstance(quantity, int)
-        ):
-            raise ValueError(Product.ERR_INIT)
+        # Product._is_valid([
+        #     (name, str),
+        #     (price, (float, int)),
+        #     (quantity, int),
+        # ])
 
         self.name = name
         self.price = price
