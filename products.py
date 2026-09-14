@@ -39,7 +39,7 @@ class Product:
         return self.quantity
 
     def set_quantity(self, quantity: int) -> None:
-        self.quantity = min(0, self.quantity + quantity)
+        self.quantity = max(0, self.quantity + quantity)
         if self.quantity == 0:
             self.deactivate()
 
