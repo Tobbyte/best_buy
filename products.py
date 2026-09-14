@@ -4,6 +4,7 @@ from typing import Any
 
 class Product:
     ERR_INIT = "Wrong init params."
+    ERR_OUTOFSTOCK = "Out of stock"
     ERR_BUY = "BUY err"
     _FIELD_TYPES = {"name": str, "price": float | int, "quantity": int}
 
@@ -59,7 +60,8 @@ class Product:
 
     def buy(self, quantity: int) -> float:
         if quantity > self.quantity:
-            raise ValueError(Product.ERR_BUY)
+            err_msg = f"{self.name}: "
+            raise ValueError(err_msg + Product.ERR_OUTOFSTOCK)
         self.set_quantity(-quantity)
 
         return quantity * self.price
