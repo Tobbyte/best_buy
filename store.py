@@ -1,21 +1,38 @@
 # ruff: noqa: D100, D101
-from typing import ClassVar
+from typing import Any, ClassVar
 
+from fields_validator import validate
 from products import Product
 
 
 class Store:
     _EVALD_FIELDS: ClassVar[dict] = {
-        "product": Product,
+        "products": list | None,
     }
 
-    def __init__(self, products: list[Product] | None) -> None:
+    @staticmethod
+    def guard_valid_product(product: Any):  # noqa: ANN401
+        if not isinstance(product, Product):
+            err_msg = "add_product: 'product' is not of type Product"
+            raise TypeError(err_msg)
+
+    @validate(_EVALD_FIELDS)
+    def __setattr__(self, name: str, value: Any) -> None:  # noqa: ANN401
+        """Set attribute with validation."""
+        super().__setattr__(name, value)
+
+    def __init__(self, products: list[Product] | None = None) -> None:
+        if products:
+            for p in products:
+                Store.guard_valid_product(p)
         self.products = products or []
 
     def add_product(self, product: Product) -> None:
+        Store.guard_valid_product(product)
         self.products.append(product)
 
     def remove_product(self, product: Product):
+        Store.guard_valid_product(product)
         map(
             self.products.remove,
             (
@@ -32,6 +49,9 @@ class Store:
         return [product for product in self.products if product.is_active()]
 
     def order(self, shopping_list: list[tuple[Product, int]]) -> float:
+        # No validation of shopping_list bc parameterized generic.
+        # Would need deep nasty nested checks or better param. Won't fix
+        # See in 'validate' doc.
         total: float = 0
         for item, quant in shopping_list:
             total += item.price * quant
@@ -49,5 +69,9 @@ if __name__ == "__main__":
 
     best_buy = Store(product_list)
     products = best_buy.get_all_products()
+    best_buy.add_product(
+        Product("MacBook Air M2222", price=1450, quantity=100),
+    )
     print(best_buy.get_total_quantity())
     print(best_buy.order([(products[0], 1), (products[1], 2)]))
+    # ^ not caught by validate
