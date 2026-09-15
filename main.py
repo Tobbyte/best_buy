@@ -1,6 +1,9 @@
+"""Main module for the Best Buy application."""
+
 import sys
 
 from config import (
+    MENU_PROMPT,
     ORDER_ABORT,
     ORDER_ADDED_TO_CART,
     ORDER_AMOUNT_PROMPT,
@@ -15,28 +18,27 @@ from valid_tobbyte_module.valid_tobbyte.validator_fn import (
     validate_fn as get_valid_input,
 )
 
-
-def MENU_PROMPT(count: int) -> str:  # noqa: D103, N802
-    return f"Choose an item by its number [1 - {count}]: "
+_CACHE_STORE = None  # until I know valid singletons
 
 
-def store(product_list: list | None = None):
+def _store(product_list: list | None = None) -> Store:
+    """Create a singleton Store instance.
+
+    If product_list is provided, initialized with those products.
+    """
     global _CACHE_STORE  # noqa: PLW0603
     if not _CACHE_STORE:
         _CACHE_STORE = Store(product_list)
     return _CACHE_STORE
 
 
-def print_spacer():
-    print("------")  # spacer
-
-
-def place_order():
+def _place_order() -> None:
+    """Place an order for products."""
     print("Available products:")
     shopping_card = []
     product_selection = None
     amount_selection = None
-    available_products = store().get_all_products()
+    available_products = _store().get_all_products()
     products_dispatch = {}
 
     def get_amount_in_cart(product: Product) -> int:
@@ -105,30 +107,33 @@ def place_order():
 
     if product_selection is not None and amount_selection is not None:
         print("\n\n***********")
-        total = store().order(shopping_card)
+        total = _store().order(shopping_card)
         print(ORDER_PLACED + str(total))
         print("***********")
     return
 
 
-def print_all_products():
+def _print_all_products() -> None:
+    """Print all products in the store."""
     print("Products in store:")
-    for p in store().get_all_products():
+    for p in _store().get_all_products():
         p.show()
 
 
-def get_total_store_stock():
-    print(f"Total of {store().get_total_quantity()} items in store")
+def _get_total_store_stock() -> None:
+    """Print the total quantity of all products in the store."""
+    print(f"Total of {_store().get_total_quantity()} items in store")
 
 
-def start():
+def _start() -> None:
+    """Start the Best Buy application with a menu-driven interface."""
     print()
     print("Store Menu")
-    print_spacer()
+    print("------")
     menu_dispatch = {
-        1: ("List all products in store", print_all_products),
-        2: ("Show total amount in store", get_total_store_stock),
-        3: ("Make an order", place_order),
+        1: ("List all products in store", _print_all_products),
+        2: ("Show total amount in store", _get_total_store_stock),
+        3: ("Make an order", _place_order),
         4: ("Quit", sys.exit),
     }
     while True:
@@ -148,20 +153,24 @@ def start():
             sys.exit()
 
         print()
-        print_spacer()
+        print("------")
         menu_dispatch[selection][1]()
         print()
 
 
-def init_superstore():
+def init_superstore() -> None:
+    """Initialize the Best Buy application.
+
+    Use a predefined set of products and start the menu interface.
+    """
     # setup initial stock of inventory
     product_list = [
         Product("MacBook Air M2", price=1450, quantity=100),
         Product("Bose QuietComfort Earbuds", price=250, quantity=500),
         Product("Google Pixel 7", price=500, quantity=250),
     ]
-    store(product_list)
-    start()
+    _store(product_list)
+    _start()
 
 
 if __name__ == "__main__":
