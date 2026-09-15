@@ -31,19 +31,3 @@ def validate(eval_fields: dict) -> Callable:
         return wrapper
 
     return deco
-
-    # alternativ
-    # @classmethod
-    # def _is_valid(cls, sets: list[tuple[Any, (tuple | type)]]) -> bool:
-    #     for val, data_type in sets:
-    #         if not isinstance(val, (data_type,)):
-    #             err_msg = f"{val} is not of type {data_type}"
-    #             raise TypeError(err_msg)
-    #     return True
-
-    # in set_prod:
-    # Product._is_valid([
-    #     (name, str),
-    #     (price, (float, int)),
-    #     (quantity, int),
-    # ])
