@@ -13,6 +13,7 @@ def MENU_PROMPT(count: int) -> str:  # noqa: D103, N802
 
 _CACHE_STORE = None
 ORDER_PRODUCT_PROMPT = "Which product # do you want? "
+ORDER_EXIT_PROMPT = "When you want to finish order, enter empty text."
 ORDER_AMOUNT_PROMPT = "What amount do you want? "
 ORDER_ADDED_TO_CART = "Product added to list!"
 ORDER_PLACED = "Order made! Total payment: $"
@@ -50,14 +51,18 @@ def place_order():
         products_dispatch[i + 1] = available_products[i]
         print(f"{i + 1}: ", end="")
         available_products[i].show()
-
+    print(ORDER_EXIT_PROMPT)
     print()
 
     # loop ordering
     while True:
         new_product_selection = get_valid_input(
-            valid_inputs=list(range(1, len(products_dispatch) + 1)),
+            valid_inputs=[
+                *list(range(1, len(products_dispatch) + 1)),
+                "Enter",
+            ],
             prompt=ORDER_PRODUCT_PROMPT,
+            exit_promt="",
         )
 
         if not new_product_selection:
@@ -71,8 +76,9 @@ def place_order():
         product_selection = new_product_selection - 1  # reset from display
 
         new_amount_selection = get_valid_input(
-            valid_inputs=[int],
+            valid_inputs=[int, "Enter"],
             prompt=ORDER_AMOUNT_PROMPT,
+            exit_promt="",
         )
         if not new_amount_selection:
             # returned from amount selection menu wo selection
