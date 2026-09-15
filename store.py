@@ -29,6 +29,7 @@ class Store:
 
     def add_product(self, product: Product) -> None:
         Store.guard_valid_product(product)
+        # TODO: guard against douple inputting. Won't fix.
         self.products.append(product)
 
     def remove_product(self, product: Product):
