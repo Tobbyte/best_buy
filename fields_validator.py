@@ -12,6 +12,10 @@ def validate(eval_fields: dict) -> Callable:
         eval_fields (dict): A dic of field names and their expected
         types which are valid for that class.
 
+    Note:
+    isinstance(value, expected_type) fails for parameterized generics,
+    e.g. 'list[int]'. Won't fix, too much for this project.
+
     """
 
     def deco(func: Callable) -> Callable:
