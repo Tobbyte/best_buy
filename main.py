@@ -1,40 +1,166 @@
+import sys
+
 from products import Product
 from store import Store
-
-bose = Product("Bose QuietComfort Earbuds", price=250, quantity=500)
-mac = Product("MacBook Air M2", price=1450, quantity=100)
-
-print("bose.buy(50)", bose.buy(50))
-print("mac.buy(10)", mac.buy(10))
-print("mac.is_active()", mac.is_active())
-
-bose.show()
-mac.show()
-
-bose.set_quantity(1000)
-bose.show()
-
-# instance of a store
-best_buy = Store([bose, mac])
-
-pixel = Product("Google Pixel 7", price=500, quantity=250)
-best_buy.add_product(pixel)
-
-
-price = best_buy.order([(bose, 5), (mac, 30), (bose, 10)])
-print(f"Order cost: {price} dollars.")
-
-
-product_list = [
-    Product("MacBook Air M2", price=1450, quantity=100),
-    Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-    Product("Google Pixel 7", price=500, quantity=250),
-]
-
-best_buy = Store(product_list)
-products = best_buy.get_all_products()
-print("total quant:", best_buy.get_total_quantity())
-print(
-    "order product_list:",
-    best_buy.order([(products[0], 1), (products[1], 2)]),
+from valid_tobbyte_module.valid_tobbyte.validator_fn import (
+    validate_fn as get_valid_input,
 )
+
+
+def MENU_PROMPT(count: int) -> str:  # noqa: D103, N802
+    return f"Choose an item by its number [1 - {count}]: "
+
+
+_CACHE_STORE = None
+ORDER_PRODUCT_PROMPT = "Which product # do you want? "
+ORDER_AMOUNT_PROMPT = "What amount do you want? "
+ORDER_ADDED_TO_CART = "Product added to list!"
+ORDER_PLACED = "Order made! Total payment: $"
+ORDER_ABORT = "Abort ordering."
+ORDER_ERR_QUANT = (
+    "Error placing item in cart: "
+    "Quantity larger than what exists. Items available: "
+)
+
+
+def store(product_list: list | None = None):
+    global _CACHE_STORE  # noqa: PLW0603
+    if not _CACHE_STORE:
+        _CACHE_STORE = Store(product_list)
+    return _CACHE_STORE
+
+
+def print_spacer():
+    print("------")  # spacer
+
+
+def place_order():
+    print("Available products:")
+    shopping_card = []
+    product_selection = None
+    amount_selection = None
+    available_products = store().get_all_products()
+    products_dispatch = {}
+
+    def get_amount_in_cart(product: Product) -> int:
+        return sum([tup[1] for tup in shopping_card if tup[0] is product])
+
+    # construct and print product selection menu
+    for i in range(len(available_products)):
+        products_dispatch[i + 1] = available_products[i]
+        print(f"{i + 1}: ", end="")
+        available_products[i].show()
+
+    print()
+
+    # loop ordering
+    while True:
+        new_product_selection = get_valid_input(
+            valid_inputs=list(range(1, len(products_dispatch) + 1)),
+            prompt=ORDER_PRODUCT_PROMPT,
+        )
+
+        if not new_product_selection:
+            # returned from product selection menu wo selection
+            if not shopping_card:
+                # made not prev. placement, abort to main menu
+                print("\n" + ORDER_ABORT)
+                return
+            break
+
+        product_selection = new_product_selection - 1  # reset from display
+
+        new_amount_selection = get_valid_input(
+            valid_inputs=[int],
+            prompt=ORDER_AMOUNT_PROMPT,
+        )
+        if not new_amount_selection:
+            # returned from amount selection menu wo selection
+            if not shopping_card:
+                # made not prev. placement, abort to main menu
+                print("\n" + ORDER_ABORT)
+                return
+            break
+
+        items_of_product_availale = available_products[
+            product_selection
+        ].get_quantity() - get_amount_in_cart(
+            available_products[product_selection],
+        )
+
+        if new_amount_selection > items_of_product_availale:
+            print(f"{ORDER_ERR_QUANT} {items_of_product_availale}")
+        else:
+            amount_selection = new_amount_selection
+
+            shopping_card.append((
+                available_products[product_selection],
+                amount_selection,
+            ))
+
+            print(ORDER_ADDED_TO_CART)
+            print()
+
+    if product_selection is not None and amount_selection is not None:
+        print("\n\n***********")
+        total = store().order(shopping_card)
+        print(ORDER_PLACED + str(total))
+        print("***********")
+    return
+
+
+def print_all_products():
+    print("Products in store:")
+    for p in store().get_all_products():
+        p.show()
+
+
+def get_total_store_stock():
+    print(f"Total of {store().get_total_quantity()} items in store")
+
+
+def start():
+    print()
+    print("Store Menu")
+    print_spacer()
+    menu_dispatch = {
+        1: ("List all products in store", print_all_products),
+        2: ("Show total amount in store", get_total_store_stock),
+        3: ("Make an order", place_order),
+        4: ("Quit", sys.exit),
+    }
+    while True:
+        list(
+            map(
+                print,
+                (f"{tup[0]} {tup[1][0]}" for tup in menu_dispatch.items()),
+            ),
+        )  # unnecessary complex but fun
+        print()
+        selection = get_valid_input(
+            valid_inputs=list(range(1, len(menu_dispatch) + 1)),
+            prompt=MENU_PROMPT(len(menu_dispatch)),
+        )
+
+        if not selection:  # exit by double enter none in get_valid_input
+            sys.exit()
+
+        print()
+        print_spacer()
+        menu_dispatch[selection][1]()
+        print()
+
+
+def init_superstore():
+    # setup initial stock of inventory
+    product_list = [
+        Product("MacBook Air M2", price=1450, quantity=100),
+        Product("Bose QuietComfort Earbuds", price=250, quantity=500),
+        Product("Google Pixel 7", price=500, quantity=250),
+    ]
+    store(product_list)
+    start()
+
+
+if __name__ == "__main__":
+    init_superstore()
