@@ -33,12 +33,14 @@ class Store:
 
     def remove_product(self, product: Product):
         Store.guard_valid_product(product)
-        map(
-            self.products.remove,
-            (
-                prod_in_store
-                for prod_in_store in self.products
-                if prod_in_store.name == product.name
+        list(
+            map(
+                self.products.remove,  # assumes products never double
+                (
+                    prod_in_store
+                    for prod_in_store in self.products
+                    if prod_in_store.name == product.name
+                ),
             ),
         )
 
