@@ -1,4 +1,4 @@
-# ruff: noqa: D100, D101
+"""Store class for the Best Buy application."""
 from typing import Any, ClassVar
 
 from fields_validator import validate
@@ -6,12 +6,22 @@ from products import Product
 
 
 class Store:
+    """A class representing a class in the Best Buy application.
+
+    TODOs:
+    - guard against inputting identical item. Won't fix.
+    """
+
     _EVALD_FIELDS: ClassVar[dict] = {
         "products": list | None,
     }
 
     @staticmethod
-    def guard_valid_product(product: Any):  # noqa: ANN401
+    def guard_valid_product(product: Any) -> None:  # noqa: ANN401
+        """Guard to ensure the product is an instance of Product.
+
+        Raises TypeError if the product is not an instance of Product.
+        """
         if not isinstance(product, Product):
             err_msg = "add_product: 'product' is not of type Product"
             raise TypeError(err_msg)
@@ -22,17 +32,19 @@ class Store:
         super().__setattr__(name, value)
 
     def __init__(self, products: list[Product] | None = None) -> None:
+        """Initialize a Store instance."""
         if products:
             for p in products:
                 Store.guard_valid_product(p)
         self.products = products or []
 
     def add_product(self, product: Product) -> None:
+        """Add a product to the store."""
         Store.guard_valid_product(product)
-        # TODO: guard against douple inputting. Won't fix.
         self.products.append(product)
 
-    def remove_product(self, product: Product):
+    def remove_product(self, product: Product) -> None:
+        """Remove a product from the store."""
         Store.guard_valid_product(product)
         list(
             map(
@@ -46,12 +58,15 @@ class Store:
         )
 
     def get_total_quantity(self) -> int:
+        """Return the total quantity of all products in the store."""
         return sum(prod.quantity for prod in self.products)
 
     def get_all_products(self) -> list[Product]:
+        """Return a list of all products in the store."""
         return [product for product in self.products if product.is_active()]
 
     def order(self, shopping_list: list[tuple[Product, int]]) -> float:
+        """Place an order of a list of products and their quantities."""
         # No validation of shopping_list bc parameterized generic.
         # Would need deep nasty nested checks or better param. Won't fix
         # See in 'validate' doc.
