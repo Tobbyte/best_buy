@@ -1,5 +1,14 @@
 import sys
 
+from config import (
+    ORDER_ABORT,
+    ORDER_ADDED_TO_CART,
+    ORDER_AMOUNT_PROMPT,
+    ORDER_ERR_QUANT,
+    ORDER_EXIT_PROMPT,
+    ORDER_PLACED,
+    ORDER_PRODUCT_PROMPT,
+)
 from products import Product
 from store import Store
 from valid_tobbyte_module.valid_tobbyte.validator_fn import (
@@ -9,19 +18,6 @@ from valid_tobbyte_module.valid_tobbyte.validator_fn import (
 
 def MENU_PROMPT(count: int) -> str:  # noqa: D103, N802
     return f"Choose an item by its number [1 - {count}]: "
-
-
-_CACHE_STORE = None
-ORDER_PRODUCT_PROMPT = "Which product # do you want? "
-ORDER_EXIT_PROMPT = "When you want to finish order, enter empty text."
-ORDER_AMOUNT_PROMPT = "What amount do you want? "
-ORDER_ADDED_TO_CART = "Product added to list!"
-ORDER_PLACED = "Order made! Total payment: $"
-ORDER_ABORT = "Abort ordering."
-ORDER_ERR_QUANT = (
-    "Error placing item in cart: "
-    "Quantity larger than what exists. Items available: "
-)
 
 
 def store(product_list: list | None = None):
