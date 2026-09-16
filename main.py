@@ -139,7 +139,7 @@ class BestBuyApp:
         print(f"Total of {self.store.get_total_quantity()} items in store")
 
     def start(self) -> None:
-        """Start the Best Buy application with a menu-driven interface."""
+        """Start the Best Buy application."""
         print()
         print("Store Menu")
         menu_dispatch = {
