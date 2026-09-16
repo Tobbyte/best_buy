@@ -53,6 +53,23 @@ class BestBuyApp:
                 return True
             return False
 
+        def _get_new_product_selection() -> int | None:
+            return get_valid_input(
+                valid_inputs=[
+                    *list(range(1, len(products_dispatch) + 1)),
+                    "(Enter)",
+                ],
+                prompt=ORDER_PRODUCT_PROMPT,
+                exit_promt="",
+            )
+
+        def _get_new_amount_selection() -> int | None:
+            return get_valid_input(
+                valid_inputs=[int, "(Enter)"],
+                prompt=ORDER_AMOUNT_PROMPT,
+                exit_promt="",
+            )
+
         # construct and print product selection menu
         for i in range(len(available_products)):
             products_dispatch[i + 1] = available_products[i]
@@ -62,14 +79,7 @@ class BestBuyApp:
 
         # loop ordering
         while True:
-            new_product_selection: int | None = get_valid_input(
-                valid_inputs=[
-                    *list(range(1, len(products_dispatch) + 1)),
-                    "(Enter)",
-                ],
-                prompt=ORDER_PRODUCT_PROMPT,
-                exit_promt="",
-            )
+            new_product_selection = _get_new_product_selection()
 
             if not new_product_selection:
                 # returned from product selection menu wo selection
@@ -80,11 +90,7 @@ class BestBuyApp:
 
             product_selection = new_product_selection - 1  # reset from display
 
-            new_amount_selection: int | None = get_valid_input(
-                valid_inputs=[int, "(Enter)"],
-                prompt=ORDER_AMOUNT_PROMPT,
-                exit_promt="",
-            )
+            new_amount_selection = _get_new_amount_selection()
             if not new_amount_selection:
                 # returned from amount selection menu wo selection
                 if _should_abort():
