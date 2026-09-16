@@ -62,7 +62,7 @@ class BestBuyApp:
 
         # loop ordering
         while True:
-            new_product_selection = get_valid_input(
+            new_product_selection: int | None = get_valid_input(
                 valid_inputs=[
                     *list(range(1, len(products_dispatch) + 1)),
                     "(Enter)",
@@ -80,7 +80,7 @@ class BestBuyApp:
 
             product_selection = new_product_selection - 1  # reset from display
 
-            new_amount_selection = get_valid_input(
+            new_amount_selection: int | None = get_valid_input(
                 valid_inputs=[int, "(Enter)"],
                 prompt=ORDER_AMOUNT_PROMPT,
                 exit_promt="",
