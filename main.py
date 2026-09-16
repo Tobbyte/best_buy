@@ -48,7 +48,7 @@ def _place_order() -> None:
     available_products = _store().get_all_products()
     products_dispatch = {}
 
-    def get_amount_in_cart(product: Product) -> int:
+    def _get_amount_in_cart(product: Product) -> int:
         return sum([tup[1] for tup in shopping_card if tup[0] is product])
 
     def _should_abort() -> bool:
@@ -100,7 +100,7 @@ def _place_order() -> None:
 
         items_of_product_availale = available_products[
             product_selection
-        ].get_quantity() - get_amount_in_cart(
+        ].get_quantity() - _get_amount_in_cart(
             available_products[product_selection],
         )
 
