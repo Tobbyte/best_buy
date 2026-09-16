@@ -34,3 +34,7 @@ Menu options:
 | `store.py`             | `Store` class (inventory, ordering)            |
 | `fields_validator.py`  | `@validate` decorator for type-checked attrs   |
 | `config.py`            | User-facing strings and prompts                |
+
+
+## Acknowledgement
+- Made with ❤️ and without ai or code completion (except this readme)
