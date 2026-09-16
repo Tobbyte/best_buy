@@ -4,6 +4,7 @@ import sys
 
 from config import (
     MENU_PROMPT,
+    NO_PRODUCTS_MSG,
     ORDER_ABORT,
     ORDER_ADDED_TO_CART,
     ORDER_AMOUNT_PROMPT,
@@ -115,8 +116,12 @@ def _place_order() -> None:
 def _print_all_products() -> None:
     """Print all products in the store."""
     print("Products in store:")
-    for p in _store().get_all_products():
-        p.show()
+    all_products = _store().get_all_products()
+    if not all_products:
+        print(NO_PRODUCTS_MSG)
+    else:
+        for p in all_products:
+            p.show()
 
 
 def _get_total_store_stock() -> None:
