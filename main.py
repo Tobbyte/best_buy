@@ -136,7 +136,6 @@ class BestBuyApp:
         """Start the Best Buy application with a menu-driven interface."""
         print()
         print("Store Menu")
-        print("------")
         menu_dispatch = {
             1: ("List all products in store", self._print_all_products),
             2: ("Show total amount in store", self._get_total_store_stock),
@@ -144,6 +143,7 @@ class BestBuyApp:
             4: ("Quit", sys.exit),
         }
         while True:
+            print("------")
             list(
                 map(
                     print,
