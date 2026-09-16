@@ -1,15 +1,16 @@
 """Product class for the Best Buy application."""
 from typing import Any, ClassVar
 
+from config import PRODUCT_ERR_OUTOFSTOCK
 from fields_validator import validate
 
 
 class Product:
     """A class representing a product in the Best Buy application."""
 
-    ERR_INIT = "Wrong init params."
-    ERR_OUTOFSTOCK = "Out of stock"
-    ERR_BUY = "BUY err"
+    # good way to do? not sure
+    ERR_OUTOFSTOCK = PRODUCT_ERR_OUTOFSTOCK
+
     _EVALD_FIELDS: ClassVar[dict] = {
         "name": str,
         "price": float | int,
