@@ -1,4 +1,10 @@
-"""Main module for the Best Buy application."""
+"""Main module for the Best Buy application.
+
+TODOs:
+    - would be nice to show available products in cart when trying to
+      place order exceeding quantity, but refrained from that for this
+      submission bc of overhead.
+"""
 
 import sys
 
