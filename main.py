@@ -33,7 +33,7 @@ class BestBuyApp:
         """Init a new instance."""
         self.store = Store(product_list)
 
-    def _place_order(self) -> None:
+    def _place_order(self) -> None:  # noqa: C901
         """Place an order for products."""
         print("Available products:")
         shopping_card = []
