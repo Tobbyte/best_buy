@@ -58,7 +58,9 @@ class Product:
 
     def show(self) -> None:
         """Print product details in a user-friendly format."""
-        print(f"{self.name}, Price: {self.price}, Quantity: {self.quantity}")
+        print(
+            f"'{self.name}', Price: {f'{self.price:.2f}'} ¤, Quantity: {self.quantity}",
+        )
 
     def buy(self, quantity: int) -> float:
         """Buy a specified quantity of the product."""
