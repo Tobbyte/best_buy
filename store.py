@@ -60,7 +60,8 @@ class Store:
         """Return a list of all products in the store."""
         return [product for product in self.products if product.is_active()]
 
-    def order(self, shopping_list: list[tuple[Product, int]]) -> float:
+    @staticmethod
+    def order(shopping_list: list[tuple[Product, int]]) -> float:
         """Place an order of a list of products and their quantities."""
         # No validation of shopping_list bc parameterized generic.
         # Would need deep nasty nested checks or better param. Won't fix
