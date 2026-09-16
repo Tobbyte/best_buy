@@ -70,6 +70,11 @@ class BestBuyApp:
                 exit_promt="",
             )
 
+        def _confirm_order() -> None:
+            print("\n\n***********")
+            print(ORDER_PLACED + str(self.store.order(shopping_card)))
+            print("***********")
+
         # construct and print product selection menu
         for i in range(len(available_products)):
             products_dispatch[i + 1] = available_products[i]
@@ -91,6 +96,7 @@ class BestBuyApp:
             product_selection = new_product_selection - 1  # reset from display
 
             new_amount_selection = _get_new_amount_selection()
+
             if not new_amount_selection:
                 # returned from amount selection menu wo selection
                 if _should_abort():
@@ -106,6 +112,7 @@ class BestBuyApp:
 
             if new_amount_selection > items_of_product_availale:
                 print(f"{ORDER_ERR_QUANT} {items_of_product_availale}")
+
             else:
                 amount_selection = new_amount_selection
 
@@ -118,10 +125,7 @@ class BestBuyApp:
                 print()
 
         if product_selection is not None and amount_selection is not None:
-            print("\n\n***********")
-            total = self.store.order(shopping_card)
-            print(ORDER_PLACED + str(total))
-            print("***********")
+            _confirm_order()
         return
 
     def _print_all_products(self) -> None:
