@@ -49,15 +49,14 @@ def _place_order() -> None:
         products_dispatch[i + 1] = available_products[i]
         print(f"{i + 1}: ", end="")
         available_products[i].show()
-    print(ORDER_EXIT_PROMPT)
-    print()
+    print("\n" + ORDER_EXIT_PROMPT + "\n")
 
     # loop ordering
     while True:
         new_product_selection = get_valid_input(
             valid_inputs=[
                 *list(range(1, len(products_dispatch) + 1)),
-                "Enter",
+                "(Enter)",
             ],
             prompt=ORDER_PRODUCT_PROMPT,
             exit_promt="",
@@ -74,7 +73,7 @@ def _place_order() -> None:
         product_selection = new_product_selection - 1  # reset from display
 
         new_amount_selection = get_valid_input(
-            valid_inputs=[int, "Enter"],
+            valid_inputs=[int, "(Enter)"],
             prompt=ORDER_AMOUNT_PROMPT,
             exit_promt="",
         )
