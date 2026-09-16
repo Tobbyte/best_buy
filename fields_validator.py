@@ -20,7 +20,7 @@ def validate(eval_fields: dict) -> Callable:
 
     def deco(func: Callable) -> Callable:
         @wraps(func)
-        def wrapper(self: Callable, name: str, value: Any) -> TypeError | None:  # noqa: ANN401
+        def wrapper(self: Any, name: str, value: Any) -> None:  # noqa: ANN401
             """Validate."""
             expected_type = eval_fields.get(name)
             if expected_type and not isinstance(value, expected_type):
