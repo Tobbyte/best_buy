@@ -4,6 +4,8 @@ TODOs:
     - would be nice to show available products in cart when trying to
       place order exceeding quantity, but refrained from that for this
       submission bc of overhead.
+
+~ Made with ❤️ and without ai or code completion ~
 """
 
 import sys
