@@ -51,6 +51,14 @@ def _place_order() -> None:
     def get_amount_in_cart(product: Product) -> int:
         return sum([tup[1] for tup in shopping_card if tup[0] is product])
 
+    def _should_abort() -> bool:
+        # Print abort msg if card is empty.
+        # Used in check on empty input
+        if not shopping_card:
+            print("\n" + ORDER_ABORT)
+            return True
+        return False
+
     # construct and print product selection menu
     for i in range(len(available_products)):
         products_dispatch[i + 1] = available_products[i]
@@ -71,9 +79,8 @@ def _place_order() -> None:
 
         if not new_product_selection:
             # returned from product selection menu wo selection
-            if not shopping_card:
+            if _should_abort():
                 # made not prev. placement, abort to main menu
-                print("\n" + ORDER_ABORT)
                 return
             break
 
@@ -86,9 +93,8 @@ def _place_order() -> None:
         )
         if not new_amount_selection:
             # returned from amount selection menu wo selection
-            if not shopping_card:
+            if _should_abort():
                 # made not prev. placement, abort to main menu
-                print("\n" + ORDER_ABORT)
                 return
             break
 
