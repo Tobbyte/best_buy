@@ -20,7 +20,7 @@ def validate(eval_fields: dict) -> Callable:
 
     def deco(func: Callable) -> Callable:
         @wraps(func)
-        def wrapper(self: Callable, name: str, value: Any) -> TypeError | None:  # noqa: ANN401
+        def wrapper(self: Any, name: str, value: Any) -> None:  # noqa: ANN401
             """Validate."""
             expected_type = eval_fields.get(name)
             if expected_type and not isinstance(value, expected_type):
@@ -31,19 +31,3 @@ def validate(eval_fields: dict) -> Callable:
         return wrapper
 
     return deco
-
-    # alternativ
-    # @classmethod
-    # def _is_valid(cls, sets: list[tuple[Any, (tuple | type)]]) -> bool:
-    #     for val, data_type in sets:
-    #         if not isinstance(val, (data_type,)):
-    #             err_msg = f"{val} is not of type {data_type}"
-    #             raise TypeError(err_msg)
-    #     return True
-
-    # in set_prod:
-    # Product._is_valid([
-    #     (name, str),
-    #     (price, (float, int)),
-    #     (quantity, int),
-    # ])

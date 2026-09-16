@@ -1,13 +1,16 @@
-# ruff: noqa: D100, D107, D101, D102
+"""Product class for the Best Buy application."""
 from typing import Any, ClassVar
 
+from config import PRODUCT_ERR_OUTOFSTOCK
 from fields_validator import validate
 
 
 class Product:
-    ERR_INIT = "Wrong init params."
-    ERR_OUTOFSTOCK = "Out of stock"
-    ERR_BUY = "BUY err"
+    """A class representing a product in the Best Buy application."""
+
+    # good way to do? not sure
+    ERR_OUTOFSTOCK = PRODUCT_ERR_OUTOFSTOCK
+
     _EVALD_FIELDS: ClassVar[dict] = {
         "name": str,
         "price": float | int,
@@ -16,40 +19,53 @@ class Product:
     }
 
     @validate(_EVALD_FIELDS)
-    def __setattr__(self, name: str, value: Any) -> None:
+    def __setattr__(self, name: str, value: Any) -> None:  # noqa: ANN401
         """Set attribute with validation."""
         super().__setattr__(name, value)
 
     def __init__(self, name: str, price: float, quantity: int) -> None:
-
+        """Initialize a Product instance."""
         self.name = name
         self.price = price
         self.quantity = quantity
         self.active = True
 
     def get_quantity(self) -> int:
+        """Return the current quantity of the product."""
         return self.quantity
 
     def set_quantity(self, quantity: int) -> None:
+        """Set the quantity of the product.
+
+        Ensures it doesn't go below zero.
+        """
         self.quantity = max(0, self.quantity + quantity)
         if self.quantity == 0:
             self.deactivate()
 
     def is_active(self) -> bool:
+        """Return whether product is available for purchase (active)."""
         return self.active
 
     def activate(self) -> bool:
+        """Activate the product, making it available for purchase."""
         self.active = True
         return self.active
 
     def deactivate(self) -> bool:
+        """Deactivate the product, that is unavailable for purchase."""
         self.active = False
         return self.active
 
     def show(self) -> None:
-        print(f"{self.name}, Price: {self.price}, Quantity: {self.quantity}")
+        """Print product details in a user-friendly format."""
+        print(
+            f"'{self.name}', Price: {self.price:.2f} ¤, "
+            f"Quantity: {self.quantity}",
+        )
 
     def buy(self, quantity: int) -> float:
+        """Buy a specified quantity of the product."""
         if quantity > self.quantity:
             err_msg = f"{self.name}: "
             raise ValueError(err_msg + Product.ERR_OUTOFSTOCK)
