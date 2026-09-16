@@ -59,7 +59,7 @@ class Product:
     def show(self) -> None:
         """Print product details in a user-friendly format."""
         print(
-            f"'{self.name}', Price: {f'{self.price:.2f}'} ¤, "
+            f"'{self.name}', Price: {self.price:.2f} ¤, "
             f"Quantity: {self.quantity}",
         )
 
