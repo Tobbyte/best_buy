@@ -43,19 +43,14 @@ class Store:
         Store.guard_valid_product(product)
         self.products.append(product)
 
-    def remove_product(self, product: Product) -> None:
+    def remove_product(self, prod_to_rem: Product) -> None:
         """Remove a product from the store."""
-        Store.guard_valid_product(product)
-        list(
-            map(
-                self.products.remove,  # assumes products never double
-                (
-                    prod_in_store
-                    for prod_in_store in self.products
-                    if prod_in_store.name == product.name
-                ),
-            ),
-        )
+        Store.guard_valid_product(prod_to_rem)
+        self.products = [
+            prod_in_store
+            for prod_in_store in self.products
+            if prod_in_store.name != prod_to_rem.name
+        ]
 
     def get_total_quantity(self) -> int:
         """Return the total quantity of all products in the store."""
