@@ -170,7 +170,7 @@ class BestBuyApp:
             print()
             selection = get_valid_input(
                 valid_inputs=list(range(1, len(menu_dispatch) + 1)),
-                prompt=MENU_PROMPT(len(menu_dispatch)),
+                prompt=MENU_PROMPT.format(count=len(menu_dispatch)),
             )
 
             if not selection:  # exit by double enter none in get_valid_input

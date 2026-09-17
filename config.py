@@ -10,8 +10,7 @@ ORDER_ERR_QUANT = (
     "Error placing item in cart: "
     "Quantity larger than what exists. Items available: "
 )
-def MENU_PROMPT(count: int) -> str:  # noqa: D103, N802
-    return f"Choose an item by its number [1 - {count}]: "
+MENU_PROMPT = "Choose an item by its number [1 - {count}]: "
 NO_PRODUCTS_MSG = "There are no products in the store."
 PRODUCT_ERR_OUTOFSTOCK = "Out of stock"
 
