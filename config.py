@@ -14,3 +14,7 @@ def MENU_PROMPT(count: int) -> str:  # noqa: D103, N802
     return f"Choose an item by its number [1 - {count}]: "
 NO_PRODUCTS_MSG = "There are no products in the store."
 PRODUCT_ERR_OUTOFSTOCK = "Out of stock"
+
+VALIDATE_ERR_NOT_OF_TYPE = "{name} is not of type {type}."
+VALIDATE_ERR_STR_EMPTY = "{name} can't be empty."
+VALIDATE_ERR_MUST_BE_POSITIVE = "{name} can't be negativ."
