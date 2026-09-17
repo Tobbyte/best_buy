@@ -66,11 +66,16 @@ class BestBuyApp:
             )
 
         def _get_new_amount_selection() -> int | None:
-            return get_valid_input(
+            inp = get_valid_input(
                 valid_inputs=[int, "(Enter)"],
                 prompt=ORDER_AMOUNT_PROMPT,
                 exit_promt="",
             )
+            if inp and inp <= 0:
+                # kinda cheep fix. need to be handled cleanly
+                # by valid_tobbyte_module. ok for now.
+                return _get_new_amount_selection()
+            return inp
 
         def _confirm_order() -> None:
             print("\n\n***********")
