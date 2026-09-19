@@ -53,7 +53,7 @@ from valid_tobbyte_module.valid_tobbyte.validator_fn import (
 )
 
 
-class BestBuyApp:
+class BestBuyApp:  # pylint: disable=R0903
     """The Best Buy application."""
 
     def __init__(self, product_list: list[Product] | None = None) -> None:
