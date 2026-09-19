@@ -41,7 +41,7 @@ class Product:
 
         Ensures it doesn't go below zero.
         """
-        self.quantity = max(0, self.quantity + quantity)
+        self.quantity = max(0, quantity)
         if self.quantity == 0:
             self.deactivate()
 
