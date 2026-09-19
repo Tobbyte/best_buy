@@ -30,8 +30,7 @@ def validate(eval_fields: dict, *, no_negatives: bool = True) -> Callable:
         def wrapper(self: Any, name: str, value: Any) -> None:  # noqa: ANN401
             """Validate."""
             expected_type = eval_fields.get(name)
-
-            if expected_type and isinstance(expected_type, str) and not value:
+            if expected_type and expected_type is str and not value:
                 err_msg = VALIDATE_ERR_STR_EMPTY.format(name=name)
                 raise TypeError(err_msg)
 
