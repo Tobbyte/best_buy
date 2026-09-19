@@ -34,8 +34,8 @@ class Store:
     def __init__(self, products: list[Product] | None = None) -> None:
         """Initialize a Store instance."""
         if products:
-            for p in products:
-                Store.guard_valid_product(p)
+            for prod in products:
+                Store.guard_valid_product(prod)
         self.products = products or []
 
     def add_product(self, product: Product) -> None:
