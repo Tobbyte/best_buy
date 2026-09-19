@@ -10,9 +10,6 @@ from fields_validator import validate
 class Product:
     """A class representing a product in the Best Buy application."""
 
-    # good way to do? not sure
-    ERR_OUTOFSTOCK = PRODUCT_ERR_OUTOFSTOCK
-
     _EVALD_FIELDS: ClassVar[dict] = {
         "name": str,
         "price": float | int,
@@ -71,7 +68,7 @@ class Product:
         """Buy a specified quantity of the product."""
         if quantity > self.quantity:
             err_msg = f"{self.name}: "
-            raise ValueError(err_msg + Product.ERR_OUTOFSTOCK)
+            raise ValueError(err_msg + PRODUCT_ERR_OUTOFSTOCK)
         self.set_quantity(self.quantity - quantity)
 
         return quantity * self.price
