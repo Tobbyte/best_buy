@@ -7,6 +7,7 @@ from config import (
     PRODUCT_ERR_CANTACTIVATENULLQUANT,
     PRODUCT_ERR_CANTBYINACTIVE,
     PRODUCT_ERR_CANTBYNEGATIVQUANT,
+    PRODUCT_ERR_CANTHAVENEGATIVEQUANT,
     PRODUCT_ERR_OUTOFSTOCK,
 )
 from fields_validator import validate
@@ -43,7 +44,8 @@ class Product:
 
         Ensures it doesn't go below zero.
         """
-        self.quantity = max(0, quantity)
+        if quantity < 0:
+            raise ValueError(PRODUCT_ERR_CANTHAVENEGATIVEQUANT)
         if self.quantity == 0:
             self.deactivate()
 
