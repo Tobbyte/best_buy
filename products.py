@@ -1,4 +1,6 @@
 """Product class for the Best Buy application."""
+from __future__ import annotations  # needed to return Class in Class def
+
 from typing import Any, ClassVar
 
 from config import PRODUCT_ERR_OUTOFSTOCK
@@ -47,15 +49,15 @@ class Product:
         """Return whether product is available for purchase (active)."""
         return self.active
 
-    def activate(self) -> bool:
+    def activate(self) -> Product:
         """Activate the product, making it available for purchase."""
         self.active = True
-        return self.active
+        return self
 
-    def deactivate(self) -> bool:
+    def deactivate(self) -> Product:
         """Deactivate the product, that is unavailable for purchase."""
         self.active = False
-        return self.active
+        return self
 
     def show(self) -> None:
         """Print product details in a user-friendly format."""
