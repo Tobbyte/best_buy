@@ -4,6 +4,7 @@ TODOs:
     - would be nice to show available products in cart when trying to
       place order exceeding quantity, but refrained from that for this
       submission bc of overhead.
+    - use custom exceptions like ProductNotActiveError
 
 Note: I just learned that my '@validate' quasi
 reinvented typing.Annotated ... it's crude, it's cumbersome but
