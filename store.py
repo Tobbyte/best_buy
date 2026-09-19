@@ -71,17 +71,11 @@ class Store:
 
 ## debug
 if __name__ == "__main__":
-    product_list = [
-        Product("MacBook Air M2", price=1450, quantity=100),
-        Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-        Product("Google Pixel 7", price=500, quantity=250),
-    ]
-
+    inactive = Product("Google Pixel 7", price=1, quantity=10)
+    active = Product("Bose QuietComfort Earbuds", price=2, quantity=10)
+    product_list = [inactive, active]
     best_buy = Store(product_list)
-    products = best_buy.get_all_products()
-    best_buy.add_product(
-        Product("MacBook Air M2222", price=1450, quantity=100),
-    )
-    print(best_buy.get_total_quantity())
-    print(best_buy.order([(products[0], 1), (products[1], 2)]))
-    # ^ not caught by validate
+    allproducts = best_buy.get_all_products()
+    for prod in allproducts:
+        prod.show()
+    print(best_buy.order([(active, 10), (inactive, 10)]))
