@@ -24,6 +24,8 @@ TODOs:
       Added a check for quant > 0 in get_all_products instead of now.
     - Ordering a cart processes the buying of the products in sequence.
       Order should be processed atomic.
+    - _get_new_amount_selection has cheap fix against input 0. Needs
+      proper solution in valid_tobbyte. Won't fix for now.
 
 Note: I just learned that my '@validate' quasi
 reinvented typing.Annotated ... it's crude, it's cumbersome but
