@@ -124,7 +124,7 @@ class BestBuyApp:
             )
 
             if new_amount_selection > items_of_product_availale:
-                print(f"{ORDER_ERR_QUANT} {items_of_product_availale}")
+                print(f"{ORDER_ERR_QUANT}{items_of_product_availale}")
 
             else:
                 amount_selection = new_amount_selection
