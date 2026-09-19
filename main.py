@@ -72,7 +72,6 @@ class BestBuyApp:  # pylint: disable=R0903
         product_selection = None
         amount_selection = None
         available_products = self.store.get_all_products()
-        products_dispatch = {}
 
         def _get_amount_in_cart(product: Product) -> int:
             return sum([tup[1] for tup in shopping_card if tup[0] is product])
@@ -88,7 +87,7 @@ class BestBuyApp:  # pylint: disable=R0903
         def _get_new_product_selection() -> int | None:
             return get_valid_input(
                 valid_inputs=[
-                    *list(range(1, len(products_dispatch) + 1)),
+                    *list(range(1, len(available_products) + 1)),
                 ],
                 prompt=ORDER_PRODUCT_PROMPT,
                 exit_promt="",
@@ -114,7 +113,6 @@ class BestBuyApp:  # pylint: disable=R0903
 
         # construct and print product selection menu
         for i, avail_prod in enumerate(available_products):
-            products_dispatch[i + 1] = avail_prod
             print(f"{i + 1}: ", end="")
             avail_prod.show()
 
