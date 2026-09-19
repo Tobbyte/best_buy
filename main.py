@@ -70,7 +70,6 @@ class BestBuyApp:
             return get_valid_input(
                 valid_inputs=[
                     *list(range(1, len(products_dispatch) + 1)),
-                    "(Enter)",
                 ],
                 prompt=ORDER_PRODUCT_PROMPT,
                 exit_promt="",
@@ -78,7 +77,7 @@ class BestBuyApp:
 
         def _get_new_amount_selection() -> int | None:
             inp = get_valid_input(
-                valid_inputs=[int, "(Enter)"],
+                valid_inputs=[int],
                 prompt=ORDER_AMOUNT_PROMPT,
                 exit_promt="",
             )
