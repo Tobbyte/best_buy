@@ -72,7 +72,7 @@ class Product:
         if quantity > self.quantity:
             err_msg = f"{self.name}: "
             raise ValueError(err_msg + Product.ERR_OUTOFSTOCK)
-        self.set_quantity(-quantity)
+        self.set_quantity(self.quantity - quantity)
 
         return quantity * self.price
 
