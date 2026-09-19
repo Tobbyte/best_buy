@@ -64,6 +64,7 @@ class Product:
         print(
             f"'{self.name}', Price: {self.price:.2f} ¤, "
             f"Quantity: {self.quantity}",
+            (" (inactive)" if not self.is_active() else ""),
         )
 
     def buy(self, quantity: int) -> float:
