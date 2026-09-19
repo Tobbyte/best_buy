@@ -1,15 +1,19 @@
 """Product class for the Best Buy application."""
+from __future__ import annotations  # needed to return Class in Class def
+
 from typing import Any, ClassVar
 
-from config import PRODUCT_ERR_OUTOFSTOCK
+from config import (
+    PRODUCT_ERR_CANTACTIVATENULLQUANT,
+    PRODUCT_ERR_CANTBYINACTIVE,
+    PRODUCT_ERR_CANTBYNEGATIVQUANT,
+    PRODUCT_ERR_OUTOFSTOCK,
+)
 from fields_validator import validate
 
 
 class Product:
     """A class representing a product in the Best Buy application."""
-
-    # good way to do? not sure
-    ERR_OUTOFSTOCK = PRODUCT_ERR_OUTOFSTOCK
 
     _EVALD_FIELDS: ClassVar[dict] = {
         "name": str,
@@ -28,7 +32,7 @@ class Product:
         self.name = name
         self.price = price
         self.quantity = quantity
-        self.active = True
+        self.active = quantity > 0
 
     def get_quantity(self) -> int:
         """Return the current quantity of the product."""
@@ -39,7 +43,7 @@ class Product:
 
         Ensures it doesn't go below zero.
         """
-        self.quantity = max(0, self.quantity + quantity)
+        self.quantity = max(0, quantity)
         if self.quantity == 0:
             self.deactivate()
 
@@ -47,44 +51,60 @@ class Product:
         """Return whether product is available for purchase (active)."""
         return self.active
 
-    def activate(self) -> bool:
+    def activate(self) -> Product:
         """Activate the product, making it available for purchase."""
+        if self.quantity == 0:
+            raise ValueError(PRODUCT_ERR_CANTACTIVATENULLQUANT)
         self.active = True
-        return self.active
+        return self
 
-    def deactivate(self) -> bool:
+    def deactivate(self) -> Product:
         """Deactivate the product, that is unavailable for purchase."""
         self.active = False
-        return self.active
+        return self
 
     def show(self) -> None:
         """Print product details in a user-friendly format."""
         print(
             f"'{self.name}', Price: {self.price:.2f} ¤, "
             f"Quantity: {self.quantity}",
+            (" (inactive)" if not self.is_active() else ""),
         )
 
     def buy(self, quantity: int) -> float:
         """Buy a specified quantity of the product."""
+        if not self.active:
+            raise ValueError(PRODUCT_ERR_CANTBYINACTIVE.format(name=self.name))
+
+        if quantity <= 0:
+            raise ValueError(
+                PRODUCT_ERR_CANTBYNEGATIVQUANT.format(
+                    quantity=quantity,
+                    name=self.name,
+                ),
+            )
+
         if quantity > self.quantity:
             err_msg = f"{self.name}: "
-            raise ValueError(err_msg + Product.ERR_OUTOFSTOCK)
-        self.set_quantity(-quantity)
+            raise ValueError(err_msg + PRODUCT_ERR_OUTOFSTOCK)
+        self.set_quantity(self.quantity - quantity)
 
         return quantity * self.price
 
 
 ## debug
 if __name__ == "__main__":
-    bose = Product("Bose QuietComfort Earbuds", price=250, quantity=500)
+    # bose = Product("", price=250, quantity=500)
+    bose = Product("as", price=250, quantity=500)
     mac = Product("MacBook Air M2", price=1450, quantity=100)
 
-    print(bose.buy(50))
-    print(mac.buy(100))
-    print(mac.is_active())
+    print(bose.buy(500))
+    bose.activate()
+    # print(mac.buy(100))
+    # print(mac.is_active())
 
-    bose.show()
-    mac.show()
-
-    bose.set_quantity(1000)
-    bose.show()
+    # bose.show()
+    # mac.show()
+    # bose.buy(0)
+    # bose.set_quantity(1000)
+    # bose.show()

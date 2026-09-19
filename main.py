@@ -4,6 +4,26 @@ TODOs:
     - would be nice to show available products in cart when trying to
       place order exceeding quantity, but refrained from that for this
       submission bc of overhead.
+    - use custom exceptions like ProductNotActiveError
+    - TBD:
+        - Should initializing of a Product with price 0 be possible?
+          'None' if set with 0 seems more appropriate.
+        - Shouldn't it be possible to buy an inactive product, think
+          manual override by clerk as exception?
+        - Store.get_total_quantity only gets quantity of active products
+          which is inconsistent with fns name ("total" implies all).
+          Ditto Store.get_all_products. But is requested, won't fix.
+        - Should setting the quantity > 0 of an inactive product
+          automatically activate it?
+    - It seems, as if products could be mutated even after added to the
+      store. F.e. directly setting `prod.quantity = 0` wouldn't throw
+      but create active, but 0 quant product in store. Solving this
+      elegantly goes beyond my current understanding of classes. Could
+      add a check for name = quantity in __setattr but this seems
+      cumbersome.
+      Added a check for quant > 0 in get_all_products instead of now.
+    - Ordering a cart processes the buying of the products in sequence.
+      Order should be processed atomic.
 
 Note: I just learned that my '@validate' quasi
 reinvented typing.Annotated ... it's crude, it's cumbersome but
@@ -64,7 +84,6 @@ class BestBuyApp:
             return get_valid_input(
                 valid_inputs=[
                     *list(range(1, len(products_dispatch) + 1)),
-                    "(Enter)",
                 ],
                 prompt=ORDER_PRODUCT_PROMPT,
                 exit_promt="",
@@ -72,7 +91,7 @@ class BestBuyApp:
 
         def _get_new_amount_selection() -> int | None:
             inp = get_valid_input(
-                valid_inputs=[int, "(Enter)"],
+                valid_inputs=[int],
                 prompt=ORDER_AMOUNT_PROMPT,
                 exit_promt="",
             )
@@ -123,7 +142,7 @@ class BestBuyApp:
             )
 
             if new_amount_selection > items_of_product_availale:
-                print(f"{ORDER_ERR_QUANT} {items_of_product_availale}")
+                print(f"{ORDER_ERR_QUANT}{items_of_product_availale}")
 
             else:
                 amount_selection = new_amount_selection
