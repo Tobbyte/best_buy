@@ -167,8 +167,8 @@ class BestBuyApp:
         if not all_products:
             print(NO_PRODUCTS_MSG)
         else:
-            for p in all_products:
-                p.show()
+            for prod in all_products:
+                prod.show()
 
     def _get_total_store_stock(self) -> None:
         """Print the total quantity of all products in the store."""
