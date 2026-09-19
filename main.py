@@ -13,6 +13,17 @@ TODOs:
         - Store.get_total_quantity only gets quantity of active products
           which is inconsistent with fns name ("total" implies all).
           Ditto Store.get_all_products. But is requested, won't fix.
+        - Should setting the quantity > 0 of an inactive product
+          automatically activate it?
+    - It seems, as if products could be mutated even after added to the
+      store. F.e. directly setting `prod.quantity = 0` wouldn't throw
+      but create active, but 0 quant product in store. Solving this
+      elegantly goes beyond my current understanding of classes. Could
+      add a check for name = quantity in __setattr but this seems
+      cumbersome.
+      Added a check for quant > 0 in get_all_products instead of now.
+    - Ordering a cart processes the buying of the products in sequence.
+      Order should be processed atomic.
 
 Note: I just learned that my '@validate' quasi
 reinvented typing.Annotated ... it's crude, it's cumbersome but
