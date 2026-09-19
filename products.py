@@ -4,6 +4,7 @@ from __future__ import annotations  # needed to return Class in Class def
 from typing import Any, ClassVar
 
 from config import (
+    PRODUCT_ERR_CANTACTIVATENULLQUANT,
     PRODUCT_ERR_CANTBYINACTIVE,
     PRODUCT_ERR_CANTBYNEGATIVQUANT,
     PRODUCT_ERR_OUTOFSTOCK,
@@ -52,6 +53,8 @@ class Product:
 
     def activate(self) -> Product:
         """Activate the product, making it available for purchase."""
+        if self.quantity == 0:
+            raise ValueError(PRODUCT_ERR_CANTACTIVATENULLQUANT)
         self.active = True
         return self
 
@@ -95,12 +98,13 @@ if __name__ == "__main__":
     bose = Product("as", price=250, quantity=500)
     mac = Product("MacBook Air M2", price=1450, quantity=100)
 
-    print(bose.buy(50))
-    print(mac.buy(100))
-    print(mac.is_active())
+    print(bose.buy(500))
+    bose.activate()
+    # print(mac.buy(100))
+    # print(mac.is_active())
 
-    bose.show()
-    mac.show()
-    bose.buy(0)
-    bose.set_quantity(1000)
-    bose.show()
+    # bose.show()
+    # mac.show()
+    # bose.buy(0)
+    # bose.set_quantity(1000)
+    # bose.show()
