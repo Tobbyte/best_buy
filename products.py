@@ -3,7 +3,7 @@ from __future__ import annotations  # needed to return Class in Class def
 
 from typing import Any, ClassVar
 
-from config import PRODUCT_ERR_OUTOFSTOCK
+from config import PRODUCT_ERR_CANTBYINACTIVE, PRODUCT_ERR_OUTOFSTOCK
 from fields_validator import validate
 
 
@@ -66,6 +66,9 @@ class Product:
 
     def buy(self, quantity: int) -> float:
         """Buy a specified quantity of the product."""
+        if not self.active:
+            raise ValueError(PRODUCT_ERR_CANTBYINACTIVE.format(name=self.name))
+
         if quantity > self.quantity:
             err_msg = f"{self.name}: "
             raise ValueError(err_msg + PRODUCT_ERR_OUTOFSTOCK)
