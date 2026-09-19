@@ -10,6 +10,9 @@ TODOs:
           'None' if set with 0 seems more appropriate.
         - Shouldn't it be possible to buy an inactive product, think
           manual override by clerk as exception?
+        - Store.get_total_quantity only gets quantity of active products
+          which is inconsistent with fns name ("total" implies all).
+          Ditto Store.get_all_products. But is requested, won't fix.
 
 Note: I just learned that my '@validate' quasi
 reinvented typing.Annotated ... it's crude, it's cumbersome but
