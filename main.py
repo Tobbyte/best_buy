@@ -5,6 +5,11 @@ TODOs:
       place order exceeding quantity, but refrained from that for this
       submission bc of overhead.
     - use custom exceptions like ProductNotActiveError
+    - TBD:
+        - Should initializing of a Product with price 0 be possible?
+          'None' if set with 0 seems more appropriate.
+        - Shouldn't it be possible to buy an inactive product, think
+          manual override by clerk as exception?
 
 Note: I just learned that my '@validate' quasi
 reinvented typing.Annotated ... it's crude, it's cumbersome but
