@@ -80,6 +80,6 @@ if __name__ == "__main__":
     product_list = [inactive, active]
     best_buy = Store(product_list)
     allproducts = best_buy.get_all_products()
-    for prod in allproducts:
-        prod.show()
+    for produ in allproducts:
+        produ.show()
     print(best_buy.order([(active, 10), (inactive, 10)]))
