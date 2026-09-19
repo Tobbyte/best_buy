@@ -26,6 +26,9 @@ TODOs:
       Order should be processed atomic.
     - _get_new_amount_selection has cheap fix against input 0. Needs
       proper solution in valid_tobbyte. Won't fix for now.
+    - while ordering: unavailable products (all in card) shouldn't be
+      selectable instead of failing with "0 available". bigger refactor,
+      need to recalc menu etc. Won't fix for now.
 
 Note: I just learned that my '@validate' quasi
 reinvented typing.Annotated ... it's crude, it's cumbersome but
