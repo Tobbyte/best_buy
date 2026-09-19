@@ -66,11 +66,7 @@ class Store:
         # No validation of shopping_list bc parameterized generic.
         # Would need deep nasty nested checks or better param. Won't fix
         # See in 'validate' doc.
-        total: float = 0
-        for item, quant in shopping_list:
-            total += item.price * quant
-            item.buy(quant)
-        return total
+        return sum(item.buy(quant) for item, quant in shopping_list)
 
 
 ## debug
