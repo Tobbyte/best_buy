@@ -107,10 +107,11 @@ class BestBuyApp:
             print("***********")
 
         # construct and print product selection menu
-        for i in range(len(available_products)):
-            products_dispatch[i + 1] = available_products[i]
+        for i, avail_prod in enumerate(available_products):
+            products_dispatch[i + 1] = avail_prod
             print(f"{i + 1}: ", end="")
-            available_products[i].show()
+            avail_prod.show()
+
         print("\n" + ORDER_EXIT_PROMPT + "\n")
 
         # loop ordering
