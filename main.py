@@ -204,12 +204,11 @@ class BestBuyApp:  # pylint: disable=R0903
         }
         while True:
             print("------")
-            list(
-                map(
-                    print,
-                    (f"{tup[0]} {tup[1][0]}" for tup in menu_dispatch.items()),
-                ),
-            )  # unnecessary complex but fun
+
+            # print menu options
+            for k, (label, _) in menu_dispatch.items():
+                print(f"{k}: {label}")
+
             print()
             selection = get_valid_input(
                 valid_inputs=list(range(1, len(menu_dispatch) + 1)),
