@@ -30,15 +30,23 @@ TODOs:
 import sys
 
 from config import (
+    ALL_PRODUCT_IN_STORE,
+    MENU_LIST_ALL_PRODUCTS,
+    MENU_PLACE_ORDER,
     MENU_PROMPT,
-    NO_PRODUCTS_MSG,
+    MENU_QUIT,
+    MENU_TITLE,
+    MENU_TOTAL_STORE_STOCK,
+    NO_PRODUCTS_IN_STORE,
     ORDER_ABORT,
     ORDER_ADDED_TO_CART,
     ORDER_AMOUNT_PROMPT,
+    ORDER_AVAILABLE_PRODUCTS,
     ORDER_ERR_QUANT,
     ORDER_EXIT_PROMPT,
     ORDER_PLACED,
     ORDER_PRODUCT_PROMPT,
+    TOTAL_STORE_STOCK_MSG,
 )
 from products import Product
 from store import Store
@@ -60,7 +68,7 @@ class BestBuyApp:  # pylint: disable=R0903
         Prompts user to select products and quantities, adds them to a
         shopping cart, and processes the order.
         """
-        print("Available products:")
+        print(ORDER_AVAILABLE_PRODUCTS)
         shopping_card = []
         product_selection = None
         amount_selection = None
@@ -101,7 +109,7 @@ class BestBuyApp:  # pylint: disable=R0903
 
         def _confirm_order() -> None:
             print("\n\n***********")
-            print(ORDER_PLACED + str(self.store.order(shopping_card)))
+            print(ORDER_PLACED.format(total=self.store.order(shopping_card)))
             print("***********")
 
         # construct and print product selection menu
@@ -141,7 +149,12 @@ class BestBuyApp:  # pylint: disable=R0903
 
             if new_amount_selection > items_of_product_availale:
                 # user selected more than available
-                print(f"{ORDER_ERR_QUANT}{items_of_product_availale}")
+                print(
+                    ORDER_ERR_QUANT.format(
+                        quantity=items_of_product_availale,
+                        name=available_products[product_selection].name,
+                    ),
+                )
 
             else:
                 # user selected valid amount, add to shopping card
@@ -161,27 +174,31 @@ class BestBuyApp:  # pylint: disable=R0903
 
     def _print_all_products(self) -> None:
         """Print all products in the store."""
-        print("Products in store:")
+        print(ALL_PRODUCT_IN_STORE)
         all_products = self.store.get_all_products()
         if not all_products:
-            print(NO_PRODUCTS_MSG)
+            print(NO_PRODUCTS_IN_STORE)
         else:
             for prod in all_products:
                 prod.show()
 
     def _get_total_store_stock(self) -> None:
         """Print the total quantity of all products in the store."""
-        print(f"Total of {self.store.get_total_quantity()} items in store")
+        print(
+            TOTAL_STORE_STOCK_MSG.format(
+                total=self.store.get_total_quantity(),
+            ),
+        )
 
     def start(self) -> None:
         """Start the Best Buy application."""
         print()
-        print("Store Menu")
+        print(MENU_TITLE)
         menu_dispatch = {
-            1: ("List all products in store", self._print_all_products),
-            2: ("Show total amount in store", self._get_total_store_stock),
-            3: ("Make an order", self._place_order),
-            4: ("Quit", sys.exit),
+            1: (MENU_LIST_ALL_PRODUCTS, self._print_all_products),
+            2: (MENU_TOTAL_STORE_STOCK, self._get_total_store_stock),
+            3: (MENU_PLACE_ORDER, self._place_order),
+            4: (MENU_QUIT, sys.exit),
         }
         while True:
             print("------")

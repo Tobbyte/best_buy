@@ -7,8 +7,11 @@ from config import (
     PRODUCT_ERR_CANTACTIVATENULLQUANT,
     PRODUCT_ERR_CANTBYINACTIVE,
     PRODUCT_ERR_CANTBYNEGATIVQUANT,
-    PRODUCT_ERR_CANTHAVENEGATIVEQUANT,
     PRODUCT_ERR_OUTOFSTOCK,
+    PRODUCT_PRETTY_PRINT,
+    VALIDATE_ERR_MUST_BE_POSITIVE,
+    VALIDATE_ERR_NOT_OF_TYPE,
+    VALIDATE_ERR_STR_EMPTY,
 )
 
 
@@ -115,7 +118,9 @@ class Product:
         Use activate() for that.
         """
         if quantity < 0:
-            raise ValueError(PRODUCT_ERR_CANTHAVENEGATIVEQUANT)
+            raise ValueError(
+                VALIDATE_ERR_MUST_BE_POSITIVE.format(name="quantity"),
+            )
 
         if quantity == 0:
             self.deactivate()
@@ -141,10 +146,11 @@ class Product:
 
     def show(self) -> None:
         """Print product details in a user-friendly format."""
-        print(
-            f"'{self.__name}', Price: {self.__price:.2f} ¤, "
-            f"Quantity: {self.__quantity}",
-            (" (inactive)" if not self.is_active() else ""),
+        PRODUCT_PRETTY_PRINT(
+            self.__name,
+            self.__price,
+            self.__quantity,
+            self.__active,
         )
 
     def buy(self, quantity: int) -> float:
@@ -167,8 +173,8 @@ class Product:
             )
 
         if quantity > self.__quantity:
-            err_msg = f"{self.__name}: "
-            raise ValueError(err_msg + PRODUCT_ERR_OUTOFSTOCK)
+            raise ValueError(PRODUCT_ERR_OUTOFSTOCK.format(name=self.__name))
+
         self.set_quantity(self.__quantity - quantity)
 
         return quantity * self.__price

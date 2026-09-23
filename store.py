@@ -3,7 +3,10 @@ from typing import Any, ClassVar
 
 from products import Product
 
-from standalones.best_buy.config import PRODUCT_ERR_NOT_OF_TYPE
+from standalones.best_buy.config import (
+    VALIDATE_ERR_MUST_BE_POSITIVE,
+    VALIDATE_ERR_NOT_OF_TYPE,
+)
 
 
 class Store:
