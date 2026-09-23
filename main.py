@@ -14,7 +14,7 @@ TODOs:
           which is inconsistent with fns name ("total" implies all).
           Ditto Store.get_all_products. But is requested, won't fix.
         - Should setting the quantity > 0 of an inactive product
-          automatically activate it?
+          automatically activate it? Choose not to.
     - It seems, as if products could be mutated even after added to the
       store. F.e. directly setting `prod.quantity = 0` wouldn't throw
       but create active, but 0 quant product in store. Solving this
@@ -66,7 +66,11 @@ class BestBuyApp:  # pylint: disable=R0903
         self.store = Store(product_list)
 
     def _place_order(self) -> None:  # noqa: C901
-        """Place an order for products."""
+        """Place an order for products.
+
+        Prompts user to select products and quantities, adds them to a
+        shopping cart, and processes the order.
+        """
         print("Available products:")
         shopping_card = []
         product_selection = None
@@ -147,9 +151,11 @@ class BestBuyApp:  # pylint: disable=R0903
             )
 
             if new_amount_selection > items_of_product_availale:
+                # user selected more than available
                 print(f"{ORDER_ERR_QUANT}{items_of_product_availale}")
 
             else:
+                # user selected valid amount, add to shopping card
                 amount_selection = new_amount_selection
 
                 shopping_card.append((
