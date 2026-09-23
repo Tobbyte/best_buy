@@ -191,16 +191,83 @@ class Product:
 
 ## debug
 if __name__ == "__main__":
-    # bose = Product("", price=250, quantity=500)
-    bose = Product("as", price=250, quantity=500)
+    print("=== Product debug/manual tests ===\n")
+
+    # --- valid construction ---
     mac = Product("MacBook Air M2", price=1450, quantity=100)
+    bose = Product("Bose QuietComfort Earbuds", price=250, quantity=3)
+    assert mac.quantity == mac.get_quantity() == 100
+    assert mac.active is True
+    print("OK: construction + quantity/active accessors")
 
-    print(bose.buy(500))
-    bose.activate()
-    # print(mac.is_active())
+    # --- validation errors on construction ---
+    bad_inputs = [
+        ("", 10, 5, "empty name"),
+        ("Valid", -5, 5, "negative price"),
+        ("Valid", 10, -1, "negative quantity"),
+        ("Valid", "10", 5, "non-numeric price"),
+    ]
+    for bad_name, bad_price, bad_qty, label in bad_inputs:
+        try:
+            Product(bad_name, price=bad_price, quantity=bad_qty)  # type: ignore
+        except (TypeError, ValueError) as exc:
+            print(f"OK: rejected {label} -> {exc}")
+        else:
+            print(f"FAILED: {label} was accepted but should have raised")
 
-    # bose.show()
-    # mac.show()
-    # bose.buy(0)
-    # bose.set_quantity(1000)
-    # bose.show()
+    # --- quantity 0 on init leaves product inactive, activate() guards it ---
+    empty = Product("Sold Out Gadget", price=20, quantity=0)
+    assert empty.active is False
+    print("OK: quantity 0 on init leaves product inactive")
+    try:
+        empty.activate()
+    except ValueError as exc:
+        print(f"OK: activate() on 0-quantity product rejected -> {exc}")
+    else:
+        print("FAILED: activate() should refuse a 0-quantity product")
+
+    # --- buy(): happy path ---
+    total = bose.buy(2)
+    assert total == 500
+    assert bose.quantity == 1
+    print(
+        f"OK: buy(2) -> {total} currency units, remaining stock {bose.quantity}",
+    )
+
+    # --- buy(): more than in stock ---
+    try:
+        bose.buy(5)
+    except ValueError as exc:
+        print(f"OK: buy() over stock rejected -> {exc}")
+    else:
+        print("FAILED: buying more than available stock should raise")
+
+    # --- buy(): exactly the remaining stock deactivates the product ---
+    bose.buy(1)
+    assert bose.quantity == 0
+    assert bose.active is False
+    print("OK: buying the last unit deactivates the product automatically")
+
+    # --- buy(): now-inactive product ---
+    try:
+        bose.buy(1)
+    except ValueError as exc:
+        print(f"OK: buy() on inactive product rejected -> {exc}")
+    else:
+        print("FAILED: buying an inactive product should raise")
+
+    # --- buy(): zero quantity ---
+    try:
+        mac.buy(0)
+    except ValueError as exc:
+        print(f"OK: buy(0) rejected -> {exc}")
+    else:
+        print("FAILED: buy(0) should raise")
+
+    # --- show() ---
+    print("\nshow() output for the MacBook:")
+    mac.show()
+    print(
+        "(^ if nothing printed above: see the code review — show() currently\n"
+        " discards PRODUCT_PRETTY_PRINT's return value instead of printing it)",
+    )
