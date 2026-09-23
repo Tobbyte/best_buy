@@ -32,12 +32,21 @@ class Product:
         """Initialize a Product instance."""
         self.name = name
         self.price = price
-        self.quantity = quantity
+        self._quantity = quantity
         self.active = quantity > 0
+
+    @property
+    def quantity(self) -> int:
+        """Return the current quantity of the product.
+
+        Use set_quantity() to modify the quantity, which includes
+        validation and automatic deactivation if the quantity reaches 0.
+        """
+        return self._quantity
 
     def get_quantity(self) -> int:
         """Return the current quantity of the product."""
-        return self.quantity
+        return self._quantity
 
     def set_quantity(self, quantity: int) -> None:
         """Set the quantity of the product.
@@ -66,7 +75,7 @@ class Product:
 
         Raises ValueError if the product has zero quantity.
         """
-        if self.quantity == 0:
+        if self._quantity == 0:
             raise ValueError(PRODUCT_ERR_CANTACTIVATENULLQUANT)
         self.active = True
 
@@ -78,7 +87,7 @@ class Product:
         """Print product details in a user-friendly format."""
         print(
             f"'{self.name}', Price: {self.price:.2f} ¤, "
-            f"Quantity: {self.quantity}",
+            f"Quantity: {self._quantity}",
             (" (inactive)" if not self.is_active() else ""),
         )
 
@@ -99,10 +108,10 @@ class Product:
                 ),
             )
 
-        if quantity > self.quantity:
+        if quantity > self._quantity:
             err_msg = f"{self.name}: "
             raise ValueError(err_msg + PRODUCT_ERR_OUTOFSTOCK)
-        self.set_quantity(self.quantity - quantity)
+        self.set_quantity(self._quantity - quantity)
 
         return quantity * self.price
 

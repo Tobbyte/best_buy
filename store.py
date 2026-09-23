@@ -59,11 +59,7 @@ class Store:
 
     def get_all_products(self) -> list[Product]:
         """Return a list of all active products in the store."""
-        return [
-            product
-            for product in self.products
-            if product.is_active() and product.get_quantity() > 0
-        ]
+        return [product for product in self.products if product.is_active()]
 
     @staticmethod
     def order(shopping_list: list[tuple[Product, int]]) -> float:
