@@ -46,6 +46,9 @@ class Product:
         """
         if quantity < 0:
             raise ValueError(PRODUCT_ERR_CANTHAVENEGATIVEQUANT)
+
+        self.quantity = quantity
+
         if self.quantity == 0:
             self.deactivate()
 
