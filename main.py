@@ -98,6 +98,8 @@ class BestBuyApp:  # pylint: disable=R0903
             while True:
                 # cheep fix. need to be handled cleanly
                 # by valid_tobbyte_module. ok for now.
+                # Entering 0 will be treated as empty and exit the menu.
+                # Not very nice but accepted for now.
                 inp = get_valid_input(
                     valid_inputs=[int],
                     prompt=ORDER_AMOUNT_PROMPT,
