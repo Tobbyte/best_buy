@@ -5,7 +5,7 @@ from typing import Any
 from config import (
     PRODUCT_ERR_CANTACTIVATENULLQUANT,
     PRODUCT_ERR_CANTBYINACTIVE,
-    PRODUCT_ERR_CANTBYNEGATIVQUANT,
+    PRODUCT_ERR_CANTBYZEROQUANT,
     PRODUCT_ERR_OUTOFSTOCK,
     PRODUCT_PRETTY_PRINT,
     VALIDATE_ERR_MUST_BE_POSITIVE,
@@ -176,8 +176,7 @@ class Product:
 
         if quantity == 0:
             raise ValueError(
-                PRODUCT_ERR_CANTBYNEGATIVQUANT.format(
-                    quantity=quantity,
+                PRODUCT_ERR_CANTBYZEROQUANT.format(
                     name=self.__name,
                 ),
             )

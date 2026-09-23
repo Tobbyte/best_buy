@@ -24,7 +24,7 @@ TOTAL_STORE_STOCK_MSG = "Total of {total} (active) items in store."
 
 PRODUCT_ERR_OUTOFSTOCK = "'{name}' is out of stock."
 PRODUCT_ERR_CANTBYINACTIVE = "Can't buy inactive {name}."
-PRODUCT_ERR_CANTBYNEGATIVQUANT = "Can't buy {quantity} pcs of {name}."
+PRODUCT_ERR_CANTBYZEROQUANT = "Can't buy 0 pcs of {name}."
 PRODUCT_ERR_CANTACTIVATENULLQUANT = "Can't activate product with quantity 0."
 
 
