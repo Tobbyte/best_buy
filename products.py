@@ -1,7 +1,6 @@
 """Product class for the Best Buy application."""
-from __future__ import annotations  # needed to return Class in Class def
 
-from typing import Any, ClassVar
+from typing import Any
 
 from config import (
     PRODUCT_ERR_CANTACTIVATENULLQUANT,
@@ -15,11 +14,46 @@ from config import (
 )
 
 
+def validate_non_empty_str(name: str, value: Any) -> str:  # noqa: ANN401
+    """Validate that value is a non-empty string."""
+    if not isinstance(value, str):
+        raise TypeError(VALIDATE_ERR_NOT_OF_TYPE.format(name=name, type="str"))
+    if not value.strip():
+        raise ValueError(VALIDATE_ERR_STR_EMPTY.format(name=name))
+    return value
+
+
+def validate_non_negative_num(name: str, value: Any) -> float | int:  # noqa: ANN401
+    """Validate that value is a non-negative int or float."""
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        raise TypeError(
+            VALIDATE_ERR_NOT_OF_TYPE.format(name=name, type="int or float"),
+        )
+    if value < 0:
+        raise ValueError(VALIDATE_ERR_MUST_BE_POSITIVE.format(name=name))
+    return value
+
+
+def validate_non_negative_int(name: str, value: Any) -> int:  # noqa: ANN401
+    """Validate that value is a non-negative integer."""
+    if not isinstance(value, int) or isinstance(value, bool):
+        raise TypeError(VALIDATE_ERR_NOT_OF_TYPE.format(name=name, type="int"))
+    if value < 0:
+        raise ValueError(VALIDATE_ERR_MUST_BE_POSITIVE.format(name=name))
+    return value
+
+
 class Product:
     """A class representing a product in the Best Buy application.
 
     Attributes are protected and can be accessed via getters.
     Public setters are provided for quantity and active status.
+
+    - TBD:
+        - Raising ValueError when trying to buy more than available
+          stock, trying to buy an inactive product or activating
+          a product with 0 quantity is pretty harsh.
+
     """
 
     # Note to self: these are instance attribute annotations that define
@@ -47,22 +81,10 @@ class Product:
         Changing the name of a product is not planned for now, so
         no public setter is provided.
         """
-        if not name:
-            raise ValueError(
-                VALIDATE_ERR_STR_EMPTY.format(name="name"),
-            )
-
-        if not isinstance(name, str):
-            raise TypeError(
-                VALIDATE_ERR_NOT_OF_TYPE.format(
-                    name="name",
-                    type="str",
-                ),
-            )
-        self.__name = name
+        self.__name = validate_non_empty_str("name", name)
 
     @property
-    def price(self) -> float:
+    def price(self) -> float | int:
         """Return the price of the product."""
         return self.__price
 
@@ -72,18 +94,7 @@ class Product:
         Changing the price of a product is not planned for now, so
         no public setter is provided.
         """
-        if not isinstance(price, (int, float)):
-            raise TypeError(
-                VALIDATE_ERR_NOT_OF_TYPE.format(
-                    name="price",
-                    type="int or float",
-                ),
-            )
-        if price < 0:
-            raise ValueError(
-                VALIDATE_ERR_MUST_BE_POSITIVE.format(name="price"),
-            )
-        self.__price = price
+        self.__price = validate_non_negative_num("price", price)
 
     @property
     def quantity(self) -> int:
@@ -98,8 +109,7 @@ class Product:
     def active(self) -> bool:
         """Return whether the product is active.
 
-        Use activate() and deactivate() methods instead, which include
-        validation.
+        Use activate() and deactivate() methods to modify.
         """
         return self.__active
 
@@ -117,23 +127,11 @@ class Product:
         quantity - will not automatically activate the product.
         Use activate() for that.
         """
-        if not isinstance(quantity, int):
-            raise TypeError(
-                VALIDATE_ERR_NOT_OF_TYPE.format(
-                    name="quantity",
-                    type="int",
-                ),
-            )
-
-        if quantity < 0:
-            raise ValueError(
-                VALIDATE_ERR_MUST_BE_POSITIVE.format(name="quantity"),
-            )
-
-        if quantity == 0:
+        validated_qty = validate_non_negative_int("quantity", quantity)
+        if validated_qty == 0:
             self.deactivate()
 
-        self.__quantity = quantity
+        self.__quantity = validated_qty
 
     def is_active(self) -> bool:
         """Return whether product is available for purchase (active)."""
@@ -172,15 +170,9 @@ class Product:
                 PRODUCT_ERR_CANTBYINACTIVE.format(name=self.__name),
             )
 
-        if not isinstance(quantity, int):
-            raise TypeError(
-                VALIDATE_ERR_NOT_OF_TYPE.format(
-                    name="quantity",
-                    type="int",
-                ),
-            )
+        quantity = validate_non_negative_int("quantity", quantity)
 
-        if quantity <= 0:
+        if quantity == 0:
             raise ValueError(
                 PRODUCT_ERR_CANTBYNEGATIVQUANT.format(
                     quantity=quantity,
@@ -204,7 +196,6 @@ if __name__ == "__main__":
 
     print(bose.buy(500))
     bose.activate()
-    # print(mac.buy(100))
     # print(mac.is_active())
 
     # bose.show()
