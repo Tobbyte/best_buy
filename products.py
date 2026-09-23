@@ -114,7 +114,10 @@ class Product:
         return self._active
 
     def get_quantity(self) -> int:
-        """Return the current quantity of the product."""
+        """Return the current quantity of the product.
+
+        Doubles property quantity, but is requirement.
+        """
         return self._quantity
 
     def set_quantity(self, quantity: int) -> None:
@@ -134,7 +137,10 @@ class Product:
         self._quantity = validated_qty
 
     def is_active(self) -> bool:
-        """Return whether product is available for purchase (active)."""
+        """Return whether product is available for purchase (active).
+
+        Doubles property active, but is requirement.
+        """
         return self._active
 
     def activate(self) -> None:
