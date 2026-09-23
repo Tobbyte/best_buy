@@ -56,17 +56,15 @@ class Product:
         """Return whether product is available for purchase (active)."""
         return self.active
 
-    def activate(self) -> Product:
+    def activate(self) -> None:
         """Activate the product, making it available for purchase."""
         if self.quantity == 0:
             raise ValueError(PRODUCT_ERR_CANTACTIVATENULLQUANT)
         self.active = True
-        return self
 
-    def deactivate(self) -> Product:
+    def deactivate(self) -> None:
         """Deactivate the product, that is unavailable for purchase."""
         self.active = False
-        return self
 
     def show(self) -> None:
         """Print product details in a user-friendly format."""
