@@ -4,6 +4,8 @@ from typing import Any, ClassVar
 from fields_validator import validate
 from products import Product
 
+from standalones.best_buy.config import PRODUCT_ERR_NOT_OF_TYPE
+
 
 class Store:
     """A class representing a class in the Best Buy application.
@@ -23,8 +25,7 @@ class Store:
         Raises TypeError if the product is not an instance of Product.
         """
         if not isinstance(product, Product):
-            err_msg = "add_product: 'product' is not of type Product"
-            raise TypeError(err_msg)
+            raise TypeError(PRODUCT_ERR_NOT_OF_TYPE)
 
     @validate(_EVALD_FIELDS)
     def __setattr__(self, name: str, value: Any) -> None:  # noqa: ANN401
