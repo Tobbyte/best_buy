@@ -221,6 +221,22 @@ if __name__ == "__main__":
         else:
             print(f"FAILED: {label} was accepted but should have raised")
 
+    # --- errors on external setting ---
+    product = Product("Gadget", price=20, quantity=10)
+    not_allowed = [
+        ("name", "New Name"),
+        ("price", 30),
+        ("quantity", 5),
+        ("active", False),
+    ]
+    for attr, new_value in not_allowed:
+        try:
+            setattr(product, attr, new_value)
+        except AttributeError as exc:
+            print(f"OK: rejected external change of {attr} -> {exc}")
+        else:
+            print(f"FAILED: external change of {attr} should raise")
+
     # --- quantity 0 on init leaves product inactive, activate() guards it ---
     empty = Product("Sold Out Gadget", price=20, quantity=0)
     assert empty.active is False
@@ -269,11 +285,3 @@ if __name__ == "__main__":
         print(f"OK: buy(0) rejected -> {exc}")
     else:
         print("FAILED: buy(0) should raise")
-
-    # --- show() ---
-    print("\nshow() output for the MacBook:")
-    mac.show()
-    print(
-        "(^ if nothing printed above: see the code review — show() currently\n"
-        " discards PRODUCT_PRETTY_PRINT's return value instead of printing it)",
-    )
