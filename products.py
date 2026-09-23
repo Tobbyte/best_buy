@@ -117,6 +117,14 @@ class Product:
         quantity - will not automatically activate the product.
         Use activate() for that.
         """
+        if not isinstance(quantity, int):
+            raise TypeError(
+                VALIDATE_ERR_NOT_OF_TYPE.format(
+                    name="quantity",
+                    type="int",
+                ),
+            )
+
         if quantity < 0:
             raise ValueError(
                 VALIDATE_ERR_MUST_BE_POSITIVE.format(name="quantity"),
@@ -162,6 +170,14 @@ class Product:
         if not self.__active:
             raise ValueError(
                 PRODUCT_ERR_CANTBYINACTIVE.format(name=self.__name),
+            )
+
+        if not isinstance(quantity, int):
+            raise TypeError(
+                VALIDATE_ERR_NOT_OF_TYPE.format(
+                    name="quantity",
+                    type="int",
+                ),
             )
 
         if quantity <= 0:

@@ -61,12 +61,25 @@ class Store:
 
     def add_product(self, product: Product) -> None:
         """Add a product to the store."""
-        Store.guard_valid_product(product)
+        if not isinstance(product, Product):
+            raise TypeError(
+                VALIDATE_ERR_NOT_OF_TYPE.format(
+                    name="product",
+                    type="Product",
+                ),
+            )
         self.__products.append(product)
 
     def remove_product(self, prod_to_rem: Product) -> None:
         """Remove a product from the store."""
-        Store.guard_valid_product(prod_to_rem)
+        if not isinstance(prod_to_rem, Product):
+            raise TypeError(
+                VALIDATE_ERR_NOT_OF_TYPE.format(
+                    name="product",
+                    type="Product",
+                ),
+            )
+
         self.__products = [
             prod_in_store
             for prod_in_store in self.__products
@@ -86,9 +99,30 @@ class Store:
     @staticmethod
     def order(shopping_list: list[tuple[Product, int]]) -> float:
         """Place an order of a list of products and their quantities."""
-        # No validation of shopping_list bc parameterized generic.
-        # Would need deep nasty nested checks or better param. Won't fix
-        # See in 'validate' doc.
+        if not isinstance(shopping_list, list):
+            raise TypeError(
+                VALIDATE_ERR_NOT_OF_TYPE.format(
+                    name="shopping_list",
+                    type="list[tuple[Product, int]]",
+                ),
+            )
+        for item, quant in shopping_list:
+            if not isinstance(item, Product):
+                raise TypeError(
+                    VALIDATE_ERR_MUST_BE_POSITIVE.format(name="product"),
+                )
+            if not isinstance(quant, int):
+                raise TypeError(
+                    VALIDATE_ERR_NOT_OF_TYPE.format(
+                        name="quantity",
+                        type="int",
+                    ),
+                )
+            if quant < 0:
+                raise ValueError(
+                    VALIDATE_ERR_MUST_BE_POSITIVE.format(name="quantity"),
+                )
+
         return sum(item.buy(quant) for item, quant in shopping_list)
 
 
