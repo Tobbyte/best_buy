@@ -58,22 +58,22 @@ class Product:
 
     # Note to self: these are instance attribute annotations that define
     # the schema, and do not create a shared class state
-    __name: str
-    __price: float | int
-    __quantity: int
-    __active: bool
+    _name: str
+    _price: float | int
+    _quantity: int
+    _active: bool
 
     def __init__(self, name: str, price: float, quantity: int) -> None:
         """Initialize a Product instance."""
         self._set_name(name)
         self._set_price(price)
         self.set_quantity(quantity)
-        self.__active = quantity > 0
+        self._active = quantity > 0
 
     @property
     def name(self) -> str:
         """Return the name of the product."""
-        return self.__name
+        return self._name
 
     def _set_name(self, name: str) -> None:
         """Set the name of the product.
@@ -81,12 +81,12 @@ class Product:
         Changing the name of a product is not planned for now, so
         no public setter is provided.
         """
-        self.__name = validate_non_empty_str("name", name)
+        self._name = validate_non_empty_str("name", name)
 
     @property
     def price(self) -> float | int:
         """Return the price of the product."""
-        return self.__price
+        return self._price
 
     def _set_price(self, price: float) -> None:
         """Set the price of the product.
@@ -94,7 +94,7 @@ class Product:
         Changing the price of a product is not planned for now, so
         no public setter is provided.
         """
-        self.__price = validate_non_negative_num("price", price)
+        self._price = validate_non_negative_num("price", price)
 
     @property
     def quantity(self) -> int:
@@ -103,7 +103,7 @@ class Product:
         Use set_quantity() to modify the quantity, which includes
         validation and automatic deactivation.
         """
-        return self.__quantity
+        return self._quantity
 
     @property
     def active(self) -> bool:
@@ -111,11 +111,11 @@ class Product:
 
         Use activate() and deactivate() methods to modify.
         """
-        return self.__active
+        return self._active
 
     def get_quantity(self) -> int:
         """Return the current quantity of the product."""
-        return self.__quantity
+        return self._quantity
 
     def set_quantity(self, quantity: int) -> None:
         """Set the quantity of the product.
@@ -131,33 +131,33 @@ class Product:
         if validated_qty == 0:
             self.deactivate()
 
-        self.__quantity = validated_qty
+        self._quantity = validated_qty
 
     def is_active(self) -> bool:
         """Return whether product is available for purchase (active)."""
-        return self.__active
+        return self._active
 
     def activate(self) -> None:
         """Activate the product, making it available for purchase.
 
         Raises ValueError if the product has zero quantity.
         """
-        if self.__quantity == 0:
+        if self._quantity == 0:
             raise ValueError(PRODUCT_ERR_CANTACTIVATENULLQUANT)
-        self.__active = True
+        self._active = True
 
     def deactivate(self) -> None:
         """Deactivate the product, that is unavailable for purchase."""
-        self.__active = False
+        self._active = False
 
     def show(self) -> None:
         """Print product details in a user-friendly format."""
         print(
             PRODUCT_PRETTY_PRINT(
-                self.__name,
-                self.__price,
-                self.__quantity,
-                self.__active,
+                self._name,
+                self._price,
+                self._quantity,
+                self._active,
             ),
         )
 
@@ -167,9 +167,9 @@ class Product:
         Raises ValueError if the product is inactive, if the quantity is
         negative, or if the requested quantity exceeds available stock.
         """
-        if not self.__active:
+        if not self._active:
             raise ValueError(
-                PRODUCT_ERR_CANTBYINACTIVE.format(name=self.__name),
+                PRODUCT_ERR_CANTBYINACTIVE.format(name=self._name),
             )
 
         quantity = validate_non_negative_int("quantity", quantity)
@@ -177,16 +177,16 @@ class Product:
         if quantity == 0:
             raise ValueError(
                 PRODUCT_ERR_CANTBYZEROQUANT.format(
-                    name=self.__name,
+                    name=self._name,
                 ),
             )
 
-        if quantity > self.__quantity:
-            raise ValueError(PRODUCT_ERR_OUTOFSTOCK.format(name=self.__name))
+        if quantity > self._quantity:
+            raise ValueError(PRODUCT_ERR_OUTOFSTOCK.format(name=self._name))
 
-        self.set_quantity(self.__quantity - quantity)
+        self.set_quantity(self._quantity - quantity)
 
-        return quantity * self.__price
+        return quantity * self._price
 
 
 ## debug

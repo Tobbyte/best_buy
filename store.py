@@ -26,7 +26,7 @@ class Store:
     - It's questionable if order should be a method of Store.
     """
 
-    __products: list[Product] | list
+    _products: list[Product] | list
 
 
     def __init__(self, products: list[Product] | None = None) -> None:
@@ -40,12 +40,12 @@ class Store:
         Use add_product() and remove_product() methods to modify
         the products in store.
         """
-        return self.__products
+        return self._products
 
     def _set_products(self, products: list[Product] | None) -> None:
         """Set the list of products in the store."""
         if not products:
-            self.__products = []
+            self._products = []
             return
 
         if not isinstance(products, list):
@@ -59,33 +59,33 @@ class Store:
         for prod in products:
             _validate_is_product("product", prod)
 
-        self.__products = products
+        self._products = products
 
     def add_product(self, product: Product) -> None:
         """Add a product to the store."""
         _validate_is_product("product", product)
 
-        self.__products.append(product)
+        self._products.append(product)
 
     def remove_product(self, prod_to_rem: Product) -> None:
         """Remove a product from the store."""
         _validate_is_product("product", prod_to_rem)
 
-        self.__products = [
+        self._products = [
             prod_in_store
-            for prod_in_store in self.__products
+            for prod_in_store in self._products
             if prod_in_store.name != prod_to_rem.name
         ]
 
     def get_total_quantity(self) -> int:
         """Return the total quantity of all active products in store."""
         return sum(
-            prod.quantity for prod in self.__products if prod.is_active()
+            prod.quantity for prod in self._products if prod.is_active()
         )
 
     def get_all_products(self) -> list[Product]:
         """Return a list of all active products in the store."""
-        return [prod for prod in self.__products if prod.is_active()]
+        return [prod for prod in self._products if prod.is_active()]
 
     @staticmethod
     def order(shopping_list: list[tuple[Product, int]]) -> float:
