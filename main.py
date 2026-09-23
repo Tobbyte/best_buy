@@ -170,7 +170,7 @@ class BestBuyApp:  # pylint: disable=R0903
                 print(ORDER_ADDED_TO_CART)
                 print()
 
-        if product_selection is not None and amount_selection is not None:
+        if shopping_card:
             _confirm_order()
         return
 
