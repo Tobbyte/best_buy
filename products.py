@@ -52,10 +52,10 @@ class Product:
         if quantity < 0:
             raise ValueError(PRODUCT_ERR_CANTHAVENEGATIVEQUANT)
 
-        self.quantity = quantity
-
-        if self.quantity == 0:
+        if quantity == 0:
             self.deactivate()
+
+        self._quantity = quantity
 
     def is_active(self) -> bool:
         """Return whether product is available for purchase (active)."""
