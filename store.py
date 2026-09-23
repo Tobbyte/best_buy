@@ -1,7 +1,6 @@
 """Store class for the Best Buy application."""
 from typing import Any, ClassVar
 
-from fields_validator import validate
 from products import Product
 
 from standalones.best_buy.config import PRODUCT_ERR_NOT_OF_TYPE
@@ -16,30 +15,12 @@ class Store:
     - It's questionable if order should be a method of Store.
     """
 
-    _EVALD_FIELDS: ClassVar[dict] = {
-        "products": list | None,
-    }
+    __products: list[Product] | list
 
-    @staticmethod
-    def guard_valid_product(product: Any) -> None:  # noqa: ANN401
-        """Guard to ensure the product is an instance of Product.
-
-        Raises TypeError if the product is not an instance of Product.
-        """
-        if not isinstance(product, Product):
-            raise TypeError(PRODUCT_ERR_NOT_OF_TYPE)
-
-    @validate(_EVALD_FIELDS)
-    def __setattr__(self, name: str, value: Any) -> None:  # noqa: ANN401
-        """Set attribute with validation."""
-        super().__setattr__(name, value)
 
     def __init__(self, products: list[Product] | None = None) -> None:
         """Initialize a Store instance."""
-        if products:
-            for prod in products:
-                Store.guard_valid_product(prod)
-        self.__products = products or []
+        self._set_products(products)
 
     @property
     def products(self) -> list[Product]:
@@ -49,6 +30,31 @@ class Store:
         the products in store.
         """
         return self.__products
+
+    def _set_products(self, products: list[Product] | None) -> None:
+        """Set the list of products in the store."""
+        if not products:
+            self.__products = []
+            return
+
+        if not isinstance(products, list):
+            raise TypeError(
+                VALIDATE_ERR_NOT_OF_TYPE.format(
+                    name="products",
+                    type="list[Product]",
+                ),
+            )
+
+        for prod in products:
+            if not isinstance(prod, Product):
+                raise TypeError(
+                    VALIDATE_ERR_NOT_OF_TYPE.format(
+                        name="product",
+                        type="Product",
+                    ),
+                )
+
+        self.__products = products
 
     def add_product(self, product: Product) -> None:
         """Add a product to the store."""

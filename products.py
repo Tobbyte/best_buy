@@ -10,33 +10,77 @@ from config import (
     PRODUCT_ERR_CANTHAVENEGATIVEQUANT,
     PRODUCT_ERR_OUTOFSTOCK,
 )
-from fields_validator import validate
 
 
 class Product:
     """A class representing a product in the Best Buy application.
 
     Attributes are protected and can be accessed via getters.
-    Setters are provided for quantity and active status.
+    Public setters are provided for quantity and active status.
     """
 
-    _EVALD_FIELDS: ClassVar[dict] = {
-        "name": str,
-        "price": float | int,
-        "quantity": int,
-    }
-
-    @validate(_EVALD_FIELDS)
-    def __setattr__(self, name: str, value: Any) -> None:  # noqa: ANN401
-        """Set attribute with validation."""
-        super().__setattr__(name, value)
+    # Note to self: these are instance attribute annotations that define
+    # the schema, and do not create a shared class state
+    __name: str
+    __price: float | int
+    __quantity: int
+    __active: bool
 
     def __init__(self, name: str, price: float, quantity: int) -> None:
         """Initialize a Product instance."""
-        self.__name = name
-        self.__price = price
-        self.__quantity = quantity
+        self._set_name(name)
+        self._set_price(price)
+        self.set_quantity(quantity)
         self.__active = quantity > 0
+
+    @property
+    def name(self) -> str:
+        """Return the name of the product."""
+        return self.__name
+
+    def _set_name(self, name: str) -> None:
+        """Set the name of the product.
+
+        Changing the name of a product is not planned for now, so
+        no public setter is provided.
+        """
+        if not name:
+            raise ValueError(
+                VALIDATE_ERR_STR_EMPTY.format(name="name"),
+            )
+
+        if not isinstance(name, str):
+            raise TypeError(
+                VALIDATE_ERR_NOT_OF_TYPE.format(
+                    name="name",
+                    type="str",
+                ),
+            )
+        self.__name = name
+
+    @property
+    def price(self) -> float:
+        """Return the price of the product."""
+        return self.__price
+
+    def _set_price(self, price: float) -> None:
+        """Set the price of the product.
+
+        Changing the price of a product is not planned for now, so
+        no public setter is provided.
+        """
+        if not isinstance(price, (int, float)):
+            raise TypeError(
+                VALIDATE_ERR_NOT_OF_TYPE.format(
+                    name="price",
+                    type="int or float",
+                ),
+            )
+        if price < 0:
+            raise ValueError(
+                VALIDATE_ERR_MUST_BE_POSITIVE.format(name="price"),
+            )
+        self.__price = price
 
     @property
     def quantity(self) -> int:
@@ -46,24 +90,6 @@ class Product:
         validation and automatic deactivation.
         """
         return self.__quantity
-
-    @property
-    def name(self) -> str:
-        """Return the name of the product.
-
-        Changing the name of a product is not planned for now, so
-        no setter is provided.
-        """
-        return self.__name
-
-    @property
-    def price(self) -> float:
-        """Return the price of the product.
-
-        Changing the price of a product is not planned for now, so
-        no setter is provided.
-        """
-        return self.__price
 
     @property
     def active(self) -> bool:
