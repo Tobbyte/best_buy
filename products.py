@@ -20,7 +20,6 @@ class Product:
         "name": str,
         "price": float | int,
         "quantity": int,
-        "active": bool,
     }
 
     @validate(_EVALD_FIELDS)
