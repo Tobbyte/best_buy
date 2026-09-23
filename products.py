@@ -43,6 +43,11 @@ class Product:
         """Set the quantity of the product.
 
         Ensures it doesn't go below zero.
+        Deactivates the product if quantity is zero.
+        Be aware that setting a quantity above 0 when its not active
+        - whether deliberately set or automatically because of 0
+        quantity - will not automatically activate the product.
+        Use activate() for that.
         """
         if quantity < 0:
             raise ValueError(PRODUCT_ERR_CANTHAVENEGATIVEQUANT)
@@ -57,7 +62,10 @@ class Product:
         return self.active
 
     def activate(self) -> None:
-        """Activate the product, making it available for purchase."""
+        """Activate the product, making it available for purchase.
+
+        Raises ValueError if the product has zero quantity.
+        """
         if self.quantity == 0:
             raise ValueError(PRODUCT_ERR_CANTACTIVATENULLQUANT)
         self.active = True
@@ -75,7 +83,11 @@ class Product:
         )
 
     def buy(self, quantity: int) -> float:
-        """Buy a specified quantity of the product."""
+        """Buy a specified quantity of the product.
+
+        Raises ValueError if the product is inactive, if the quantity is
+        negative, or if the requested quantity exceeds available stock.
+        """
         if not self.active:
             raise ValueError(PRODUCT_ERR_CANTBYINACTIVE.format(name=self.name))
 
