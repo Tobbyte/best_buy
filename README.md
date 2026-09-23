@@ -32,7 +32,6 @@ Menu options:
 | `main.py`              | Menu loop and ordering flow                    |
 | `products.py`          | `Product` class                                |
 | `store.py`             | `Store` class (inventory, ordering)            |
-| `fields_validator.py`  | `@validate` decorator for type-checked attrs   |
 | `config.py`            | User-facing strings and prompts                |
 
 
