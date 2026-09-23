@@ -29,9 +29,8 @@ PRODUCT_ERR_CANTACTIVATENULLQUANT = "Can't activate product with quantity 0."
 
 
 def PRODUCT_PRETTY_PRINT(name: str, price: float, quantity: int, active: bool):  # noqa: ANN201, D103, FBT001, N802
-    return (
-        f"'{name}', Price: {price:.2f} ¤, Quantity: {quantity}",
-        (" (inactive)" if not active else ""),
+    return f"'{name}', Price: {price:.2f} ¤, Quantity: {quantity}" + (
+        " (inactive)" if not active else ""
     )
 
 VALIDATE_ERR_NOT_OF_TYPE = "{name} is not of type {type}."
