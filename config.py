@@ -7,7 +7,7 @@ ORDER_ADDED_TO_CART = "Product added to list!"
 ORDER_PLACED = "Order made! Total payment: $ {total:.2f}"
 ORDER_ABORT = "Abort ordering."
 ORDER_ERR_QUANT = (
-    "Error placing item in cart: Only {quantity} items of '{name} available."
+    "Error placing item in cart: Only {quantity} items of '{name}' available."
 )
 ORDER_AVAILABLE_PRODUCTS = "Available products:"
 
