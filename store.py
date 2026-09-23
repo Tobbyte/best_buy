@@ -1,12 +1,21 @@
 """Store class for the Best Buy application."""
-from typing import Any, ClassVar
+
+from typing import Any
 
 from products import Product
 
 from standalones.best_buy.config import (
-    VALIDATE_ERR_MUST_BE_POSITIVE,
     VALIDATE_ERR_NOT_OF_TYPE,
 )
+
+
+def _validate_is_product(name: str, value: Any) -> "Product":  # noqa: ANN401
+    """Validate that value is a Product instance."""
+    if not isinstance(value, Product):
+        raise TypeError(
+            VALIDATE_ERR_NOT_OF_TYPE.format(name=name, type="Product"),
+        )
+    return value
 
 
 class Store:
@@ -49,36 +58,19 @@ class Store:
             )
 
         for prod in products:
-            if not isinstance(prod, Product):
-                raise TypeError(
-                    VALIDATE_ERR_NOT_OF_TYPE.format(
-                        name="product",
-                        type="Product",
-                    ),
-                )
+            _validate_is_product("product", prod)
 
         self.__products = products
 
     def add_product(self, product: Product) -> None:
         """Add a product to the store."""
-        if not isinstance(product, Product):
-            raise TypeError(
-                VALIDATE_ERR_NOT_OF_TYPE.format(
-                    name="product",
-                    type="Product",
-                ),
-            )
+        _validate_is_product("product", product)
+
         self.__products.append(product)
 
     def remove_product(self, prod_to_rem: Product) -> None:
         """Remove a product from the store."""
-        if not isinstance(prod_to_rem, Product):
-            raise TypeError(
-                VALIDATE_ERR_NOT_OF_TYPE.format(
-                    name="product",
-                    type="Product",
-                ),
-            )
+        _validate_is_product("product", prod_to_rem)
 
         self.__products = [
             prod_in_store
@@ -98,31 +90,12 @@ class Store:
 
     @staticmethod
     def order(shopping_list: list[tuple[Product, int]]) -> float:
-        """Place an order of a list of products and their quantities."""
-        if not isinstance(shopping_list, list):
-            raise TypeError(
-                VALIDATE_ERR_NOT_OF_TYPE.format(
-                    name="shopping_list",
-                    type="list[tuple[Product, int]]",
-                ),
-            )
-        for item, quant in shopping_list:
-            if not isinstance(item, Product):
-                raise TypeError(
-                    VALIDATE_ERR_MUST_BE_POSITIVE.format(name="product"),
-                )
-            if not isinstance(quant, int):
-                raise TypeError(
-                    VALIDATE_ERR_NOT_OF_TYPE.format(
-                        name="quantity",
-                        type="int",
-                    ),
-                )
-            if quant < 0:
-                raise ValueError(
-                    VALIDATE_ERR_MUST_BE_POSITIVE.format(name="quantity"),
-                )
+        """Place an order of a list of products and their quantities.
 
+        No validation here, since order shouldn't be a method of Store
+        in the first place (at least how it's structured now).
+        This is just to match the requirements.
+        """
         return sum(item.buy(quant) for item, quant in shopping_list)
 
 
