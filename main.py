@@ -103,7 +103,7 @@ class BestBuyApp:  # pylint: disable=R0903
                     prompt=ORDER_AMOUNT_PROMPT,
                     exit_promt="",
                 )
-                if inp and inp > 0:
+                if not inp or inp > 0:
                     break
             return inp
 

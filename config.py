@@ -7,7 +7,7 @@ ORDER_ADDED_TO_CART = "Product added to list!"
 ORDER_PLACED = "Order made! Total payment: $ {total:.2f}"
 ORDER_ABORT = "Abort ordering."
 ORDER_ERR_QUANT = (
-    "Error placing item in cart: Only {quantity} items of '{name} available."
+    "Error placing item in cart: Only {quantity} items of '{name}' available."
 )
 ORDER_AVAILABLE_PRODUCTS = "Available products:"
 
@@ -24,14 +24,13 @@ TOTAL_STORE_STOCK_MSG = "Total of {total} (active) items in store."
 
 PRODUCT_ERR_OUTOFSTOCK = "'{name}' is out of stock."
 PRODUCT_ERR_CANTBYINACTIVE = "Can't buy inactive {name}."
-PRODUCT_ERR_CANTBYNEGATIVQUANT = "Can't buy {quantity} pcs of {name}."
+PRODUCT_ERR_CANTBYZEROQUANT = "Can't buy 0 pcs of {name}."
 PRODUCT_ERR_CANTACTIVATENULLQUANT = "Can't activate product with quantity 0."
 
 
 def PRODUCT_PRETTY_PRINT(name: str, price: float, quantity: int, active: bool):  # noqa: ANN201, D103, FBT001, N802
-    return (
-        f"'{name}', Price: {price:.2f} ¤, Quantity: {quantity}",
-        (" (inactive)" if not active else ""),
+    return f"'{name}', Price: {price:.2f} ¤, Quantity: {quantity}" + (
+        " (inactive)" if not active else ""
     )
 
 VALIDATE_ERR_NOT_OF_TYPE = "{name} is not of type {type}."
