@@ -4,12 +4,16 @@ from typing import Any, ClassVar
 from fields_validator import validate
 from products import Product
 
+from standalones.best_buy.config import PRODUCT_ERR_NOT_OF_TYPE
+
 
 class Store:
     """A class representing a class in the Best Buy application.
 
     TODOs:
     - guard against inputting identical item. Won't fix.
+    TBD:
+    - It's questionable if order should be a method of Store.
     """
 
     _EVALD_FIELDS: ClassVar[dict] = {
@@ -23,8 +27,7 @@ class Store:
         Raises TypeError if the product is not an instance of Product.
         """
         if not isinstance(product, Product):
-            err_msg = "add_product: 'product' is not of type Product"
-            raise TypeError(err_msg)
+            raise TypeError(PRODUCT_ERR_NOT_OF_TYPE)
 
     @validate(_EVALD_FIELDS)
     def __setattr__(self, name: str, value: Any) -> None:  # noqa: ANN401
@@ -36,33 +39,40 @@ class Store:
         if products:
             for prod in products:
                 Store.guard_valid_product(prod)
-        self.products = products or []
+        self.__products = products or []
+
+    @property
+    def products(self) -> list[Product]:
+        """Return the list of products in the store.
+
+        Use add_product() and remove_product() methods to modify
+        the products in store.
+        """
+        return self.__products
 
     def add_product(self, product: Product) -> None:
         """Add a product to the store."""
         Store.guard_valid_product(product)
-        self.products.append(product)
+        self.__products.append(product)
 
     def remove_product(self, prod_to_rem: Product) -> None:
         """Remove a product from the store."""
         Store.guard_valid_product(prod_to_rem)
-        self.products = [
+        self.__products = [
             prod_in_store
-            for prod_in_store in self.products
+            for prod_in_store in self.__products
             if prod_in_store.name != prod_to_rem.name
         ]
 
     def get_total_quantity(self) -> int:
-        """Return the total quantity of all products in the store."""
-        return sum(prod.quantity for prod in self.products if prod.is_active())
+        """Return the total quantity of all active products in store."""
+        return sum(
+            prod.quantity for prod in self.__products if prod.is_active()
+        )
 
     def get_all_products(self) -> list[Product]:
-        """Return a list of all products in the store."""
-        return [
-            product
-            for product in self.products
-            if product.is_active() and product.get_quantity() > 0
-        ]
+        """Return a list of all active products in the store."""
+        return [prod for prod in self.__products if prod.is_active()]
 
     @staticmethod
     def order(shopping_list: list[tuple[Product, int]]) -> float:

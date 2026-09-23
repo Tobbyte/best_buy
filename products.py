@@ -14,13 +14,16 @@ from fields_validator import validate
 
 
 class Product:
-    """A class representing a product in the Best Buy application."""
+    """A class representing a product in the Best Buy application.
+
+    Attributes are protected and can be accessed via getters.
+    Setters are provided for quantity and active status.
+    """
 
     _EVALD_FIELDS: ClassVar[dict] = {
         "name": str,
         "price": float | int,
         "quantity": int,
-        "active": bool,
     }
 
     @validate(_EVALD_FIELDS)
@@ -30,68 +33,119 @@ class Product:
 
     def __init__(self, name: str, price: float, quantity: int) -> None:
         """Initialize a Product instance."""
-        self.name = name
-        self.price = price
-        self.quantity = quantity
-        self.active = quantity > 0
+        self.__name = name
+        self.__price = price
+        self.__quantity = quantity
+        self.__active = quantity > 0
+
+    @property
+    def quantity(self) -> int:
+        """Return the current quantity of the product.
+
+        Use set_quantity() to modify the quantity, which includes
+        validation and automatic deactivation.
+        """
+        return self.__quantity
+
+    @property
+    def name(self) -> str:
+        """Return the name of the product.
+
+        Changing the name of a product is not planned for now, so
+        no setter is provided.
+        """
+        return self.__name
+
+    @property
+    def price(self) -> float:
+        """Return the price of the product.
+
+        Changing the price of a product is not planned for now, so
+        no setter is provided.
+        """
+        return self.__price
+
+    @property
+    def active(self) -> bool:
+        """Return whether the product is active.
+
+        Use activate() and deactivate() methods instead, which include
+        validation.
+        """
+        return self.__active
 
     def get_quantity(self) -> int:
         """Return the current quantity of the product."""
-        return self.quantity
+        return self.__quantity
 
     def set_quantity(self, quantity: int) -> None:
         """Set the quantity of the product.
 
         Ensures it doesn't go below zero.
+        Deactivates the product if quantity is zero.
+        Be aware that setting a quantity above 0 when its not active
+        - whether deliberately set or automatically because of 0
+        quantity - will not automatically activate the product.
+        Use activate() for that.
         """
         if quantity < 0:
             raise ValueError(PRODUCT_ERR_CANTHAVENEGATIVEQUANT)
-        if self.quantity == 0:
+
+        if quantity == 0:
             self.deactivate()
+
+        self.__quantity = quantity
 
     def is_active(self) -> bool:
         """Return whether product is available for purchase (active)."""
-        return self.active
+        return self.__active
 
-    def activate(self) -> Product:
-        """Activate the product, making it available for purchase."""
-        if self.quantity == 0:
+    def activate(self) -> None:
+        """Activate the product, making it available for purchase.
+
+        Raises ValueError if the product has zero quantity.
+        """
+        if self.__quantity == 0:
             raise ValueError(PRODUCT_ERR_CANTACTIVATENULLQUANT)
-        self.active = True
-        return self
+        self.__active = True
 
-    def deactivate(self) -> Product:
+    def deactivate(self) -> None:
         """Deactivate the product, that is unavailable for purchase."""
-        self.active = False
-        return self
+        self.__active = False
 
     def show(self) -> None:
         """Print product details in a user-friendly format."""
         print(
-            f"'{self.name}', Price: {self.price:.2f} ¤, "
-            f"Quantity: {self.quantity}",
+            f"'{self.__name}', Price: {self.__price:.2f} ¤, "
+            f"Quantity: {self.__quantity}",
             (" (inactive)" if not self.is_active() else ""),
         )
 
     def buy(self, quantity: int) -> float:
-        """Buy a specified quantity of the product."""
-        if not self.active:
-            raise ValueError(PRODUCT_ERR_CANTBYINACTIVE.format(name=self.name))
+        """Buy a specified quantity of the product.
+
+        Raises ValueError if the product is inactive, if the quantity is
+        negative, or if the requested quantity exceeds available stock.
+        """
+        if not self.__active:
+            raise ValueError(
+                PRODUCT_ERR_CANTBYINACTIVE.format(name=self.__name),
+            )
 
         if quantity <= 0:
             raise ValueError(
                 PRODUCT_ERR_CANTBYNEGATIVQUANT.format(
                     quantity=quantity,
-                    name=self.name,
+                    name=self.__name,
                 ),
             )
 
-        if quantity > self.quantity:
-            err_msg = f"{self.name}: "
+        if quantity > self.__quantity:
+            err_msg = f"{self.__name}: "
             raise ValueError(err_msg + PRODUCT_ERR_OUTOFSTOCK)
-        self.set_quantity(self.quantity - quantity)
+        self.set_quantity(self.__quantity - quantity)
 
-        return quantity * self.price
+        return quantity * self.__price
 
 
 ## debug
