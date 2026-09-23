@@ -74,7 +74,7 @@ class Store:
         self._products = [
             prod_in_store
             for prod_in_store in self._products
-            if prod_in_store.name != prod_to_rem.name
+            if prod_in_store is not prod_to_rem
         ]
 
     def get_total_quantity(self) -> int:
