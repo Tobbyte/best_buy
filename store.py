@@ -26,7 +26,7 @@ class Store:
     - It's questionable if order should be a method of Store.
     """
 
-    _products: list[Product] | list
+    _products: list[Product]
 
 
     def __init__(self, products: list[Product] | None = None) -> None:
