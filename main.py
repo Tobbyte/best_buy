@@ -23,10 +23,6 @@ TODOs:
       selectable instead of failing with "0 available". bigger refactor,
       need to recalc menu etc. Won't fix for now.
 
-Note: I just learned that my '@validate' quasi
-reinvented typing.Annotated ... it's crude, it's cumbersome but
-well.. for this it kind of get's the job done and this is already
-way beyond just classes ;)
 
 ~ Made with ❤️ and without ai or code completion ~
 """
